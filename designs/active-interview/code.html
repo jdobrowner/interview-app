@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Interview Prep Studio Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2547f4",
+            "background-light": "#f5f6f8",
+            "background-dark": "#101322",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #2d3748;
+      border-radius: 10px;
+    }
+    input[type="range"] {
+      accent-color: #2547f4;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display h-screen flex overflow-hidden">
+<!-- Left Sidebar (Expanded Configuration) -->
+<aside class="w-72 bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full z-20">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h2 class="text-xs font-bold uppercase tracking-widest text-primary">Configuration</h2>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+<!-- Model Selection -->
+<div class="space-y-2">
+<label class="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Model Selection</label>
+<div class="relative">
+<select class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm py-2.5 px-3 focus:ring-2 focus:ring-primary appearance-none cursor-pointer">
+<option>GPT-4o (Omni)</option>
+<option>Claude 3.5 Sonnet</option>
+<option>Llama 3 70B</option>
+</select>
+<span class="material-icons absolute right-3 top-2.5 text-slate-400 text-sm pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Prompt Strategy -->
+<div class="space-y-2">
+<label class="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Prompt Strategy</label>
+<div class="relative">
+<select class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm py-2.5 px-3 focus:ring-2 focus:ring-primary appearance-none cursor-pointer">
+<option>Chain-of-Thought</option>
+<option>Standard Prompting</option>
+<option>Few-Shot Examples</option>
+</select>
+<span class="material-icons absolute right-3 top-2.5 text-slate-400 text-sm pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Difficulty Level -->
+<div class="space-y-2">
+<label class="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Difficulty Level</label>
+<div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+<button class="flex-1 text-xs py-1.5 rounded-md hover:bg-white dark:hover:bg-slate-700 transition">Junior</button>
+<button class="flex-1 text-xs py-1.5 rounded-md bg-white dark:bg-slate-700 shadow-sm font-medium">Senior</button>
+<button class="flex-1 text-xs py-1.5 rounded-md hover:bg-white dark:hover:bg-slate-700 transition">Staff</button>
+</div>
+</div>
+<!-- Sliders -->
+<div class="space-y-6 pt-2">
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<label class="text-[11px] font-semibold text-slate-500 uppercase">Temperature</label>
+<span class="font-mono text-xs text-primary font-bold">0.7</span>
+</div>
+<input class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer" max="1" min="0" step="0.1" type="range" value="0.7"/>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<label class="text-[11px] font-semibold text-slate-500 uppercase">Top-P</label>
+<span class="font-mono text-xs text-primary font-bold">0.9</span>
+</div>
+<input class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer" max="1" min="0" step="0.05" type="range" value="0.9"/>
+</div>
+</div>
+</div>
+<!-- Security Status Footer -->
+<div class="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
+<span class="material-icons text-emerald-500 text-lg">shield</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter leading-none">Security Status</p>
+<p class="text-sm font-medium text-emerald-500">System Protected</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative">
+<!-- Top Card: Job Configuration -->
+<section class="p-6 w-full max-w-5xl mx-auto">
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-icons text-slate-400">work_outline</span>
+<h3 class="font-semibold text-sm">Job Configuration</h3>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[11px] text-slate-500 uppercase font-bold">Templates</span>
+<div class="relative">
+<select class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-xs py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+<option>ML Ops Specialist</option>
+<option>Senior Frontend Engineer</option>
+<option>Backend Architect</option>
+</select>
+<span class="material-icons absolute right-2 top-1.5 text-slate-400 text-[16px] pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div class="p-4 space-y-4">
+<textarea class="w-full h-32 bg-slate-50 dark:bg-slate-950 border-none rounded-lg p-4 text-sm font-mono text-slate-600 dark:text-slate-400 focus:ring-1 focus:ring-primary/50 resize-none custom-scrollbar" placeholder="Paste Job Description here...">Role: ML Ops Specialist
+Core Responsibilities:
+- Design and implement end-to-end ML pipelines using Kubeflow and Argo Workflows.
+- Optimize model serving infrastructure for low-latency inference.
+- Maintain CI/CD pipelines for automated model testing and deployment.
+Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure (GCP/AWS).</textarea>
+<div class="flex items-center justify-between">
+<div class="flex gap-2">
+<button class="bg-primary hover:bg-primary/90 text-white text-xs font-medium px-4 py-2 rounded-lg flex items-center gap-2 transition">
+<span class="material-icons text-sm">save</span>
+                Save to My Jobs
+              </button>
+<button class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium px-4 py-2 rounded-lg transition">
+                Clear
+              </button>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500">
+<span class="material-icons text-sm">history</span>
+              Last updated 2 mins ago
+            </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Chat Workspace -->
+<section class="flex-1 overflow-y-auto px-6 pb-32 custom-scrollbar">
+<div class="max-w-4xl mx-auto space-y-6">
+<!-- Assistant Message -->
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
+<span class="material-icons text-slate-500 text-sm">smart_toy</span>
+</div>
+<div class="space-y-2 max-w-[85%]">
+<div class="text-[11px] font-bold text-slate-500 uppercase flex items-center gap-2">
+              AI Interviewer <span class="w-1 h-1 rounded-full bg-slate-400"></span> 10:42 AM
+            </div>
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-xl rounded-tl-none border border-slate-200 dark:border-slate-800 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+              Hello! I've reviewed the ML Ops Specialist role. To start our simulation, could you walk me through your experience building and scaling model deployment pipelines? Specifically, how do you handle versioning for both the models and the data they consume?
+            </div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-4 flex-row-reverse">
+<div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0 border border-primary/30">
+<span class="material-icons text-primary text-sm">person</span>
+</div>
+<div class="space-y-2 max-w-[85%] text-right">
+<div class="text-[11px] font-bold text-slate-500 uppercase flex items-center gap-2 justify-end">
+              10:44 AM <span class="w-1 h-1 rounded-full bg-slate-400"></span> You
+            </div>
+<div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-xl rounded-tr-none border border-primary/40 text-sm leading-relaxed text-slate-700 dark:text-slate-200 text-left">
+              In my previous role, I utilized DVC for data versioning integrated directly into our Git workflow. For model deployment, we used Seldon Core on Kubernetes. Every time a new model was trained, it was assigned a semantic version tag in our container registry, which allowed us to perform canary deployments and easy rollbacks if needed.
+            </div>
+</div>
+</div>
+<!-- Assistant Message -->
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
+<span class="material-icons text-slate-500 text-sm">smart_toy</span>
+</div>
+<div class="space-y-2 max-w-[85%]">
+<div class="text-[11px] font-bold text-slate-500 uppercase flex items-center gap-2">
+              AI Interviewer <span class="w-1 h-1 rounded-full bg-slate-400"></span> 10:45 AM
+            </div>
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-xl rounded-tl-none border border-slate-200 dark:border-slate-800 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+              Interesting approach with DVC. How did you manage the orchestration when a data update triggered a pipeline re-run? Did you implement any automated quality gates before the model moved from staging to production?
+            </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Sticky Bar -->
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent">
+<div class="max-w-4xl mx-auto flex items-end gap-4">
+<div class="flex-1 relative group">
+<textarea class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-12 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none custom-scrollbar" placeholder="Type your response..." rows="1"></textarea>
+<button class="absolute left-4 bottom-4 text-slate-400 hover:text-primary transition">
+<span class="material-icons">mic</span>
+</button>
+<button class="absolute right-4 bottom-3.5 w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition">
+<span class="material-icons text-sm">send</span>
+</button>
+</div>
+<button class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-6 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition flex-shrink-0">
+          Finish Interview
+        </button>
+</div>
+</div>
+</main>
+<!-- Right Sidebar (Performance Analytics - Mini) -->
+<aside class="w-16 bg-white dark:bg-slate-900/50 border-l border-slate-200 dark:border-slate-800 flex flex-col items-center py-6 gap-6">
+<button class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center group relative">
+<span class="material-icons">insights</span>
+<span class="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Analytics</span>
+</button>
+<button class="w-10 h-10 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center group relative transition">
+<span class="material-icons">code</span>
+<span class="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Snippets</span>
+</button>
+<button class="w-10 h-10 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center group relative transition">
+<span class="material-icons">description</span>
+<span class="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Resume</span>
+</button>
+<div class="mt-auto flex flex-col items-center gap-4">
+<div class="w-1 h-12 bg-slate-200 dark:bg-slate-800 rounded-full">
+<div class="w-full h-2/3 bg-primary rounded-full"></div>
+</div>
+<img alt="Profile" class="w-8 h-8 rounded-full border-2 border-primary/20" data-alt="User avatar for engineer profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxOFP0lZL1159eV-aRQA15j3tZ38LjTpBenGzQW92fbuSstXQ6-YwBibFotpQZXS_iFClRwdFpEGQ6VC_-KB4mXSHKA-0IsZtFCrmbrhY80JCD74ZMYOS8fgRnXNgESdpotfhXLafLU3WukePQ3WNoNLjRKRUMCdGgB7Qg1kGHRLNZga5ITzrzw5JNhVddY5wDT9BZVuLZ6y2h9TZTiKBqbdMNMHzGBWu_By3B2BCnQ14LXUN8bG4jqreatZyc-rmUDggTI5yvXo7J"/>
+</div>
+</aside>
+</body></html>

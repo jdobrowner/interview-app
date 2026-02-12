@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Interview Prep Studio Dashboard - Evaluation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2547f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101322",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2d3748;
+            border-radius: 10px;
+        }
+        input[type="range"] {
+            accent-color: #2547f4;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display h-screen flex overflow-hidden">
+<aside class="w-72 bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full z-20">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h2 class="text-xs font-bold uppercase tracking-widest text-primary">Configuration</h2>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+<div class="space-y-2">
+<label class="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Model Selection</label>
+<div class="relative opacity-50 pointer-events-none">
+<select class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm py-2.5 px-3 appearance-none cursor-default">
+<option>GPT-4o (Omni)</option>
+</select>
+<span class="material-icons absolute right-3 top-2.5 text-slate-400 text-sm pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Difficulty Level</label>
+<div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1 opacity-50">
+<button class="flex-1 text-xs py-1.5 rounded-md">Junior</button>
+<button class="flex-1 text-xs py-1.5 rounded-md bg-white dark:bg-slate-700 shadow-sm font-medium">Senior</button>
+<button class="flex-1 text-xs py-1.5 rounded-md">Staff</button>
+</div>
+</div>
+<div class="space-y-6 pt-2 opacity-50">
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<label class="text-[11px] font-semibold text-slate-500 uppercase">Temperature</label>
+<span class="font-mono text-xs text-primary font-bold">0.7</span>
+</div>
+<input class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-default" disabled="" max="1" min="0" step="0.1" type="range" value="0.7"/>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
+<span class="material-icons text-emerald-500 text-lg">shield</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter leading-none">Security Status</p>
+<p class="text-sm font-medium text-emerald-500">System Protected</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative">
+<div class="absolute inset-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md overflow-y-auto custom-scrollbar">
+<div class="max-w-5xl mx-auto py-12 px-6 space-y-10">
+<div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-8">
+<div>
+<h1 class="text-3xl font-bold tracking-tight">Performance Report</h1>
+<p class="text-slate-500 text-sm mt-1">Interview Session: ML Ops Specialist (Simulation Complete)</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<div class="text-[10px] font-bold text-slate-500 uppercase">Overall Score</div>
+<div class="text-2xl font-mono font-bold text-primary">84/100</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full px-6 py-4 flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-500">Communication</span>
+<span class="text-xs font-mono font-bold text-primary">92%</span>
+</div>
+<div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full px-6 py-4 flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-500">Technical Depth</span>
+<span class="text-xs font-mono font-bold text-primary">78%</span>
+</div>
+<div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 78%"></div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full px-6 py-4 flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-500">Confidence</span>
+<span class="text-xs font-mono font-bold text-primary">82%</span>
+</div>
+<div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6">
+<div class="flex items-center gap-2 mb-4 text-emerald-500">
+<span class="material-icons text-sm">check_circle</span>
+<h3 class="text-sm font-bold uppercase tracking-wider">What You Did Well</h3>
+</div>
+<ul class="space-y-4">
+<li class="flex gap-3 text-sm text-emerald-700 dark:text-emerald-400">
+<span class="mt-1.5 w-1 h-1 rounded-full bg-emerald-500 flex-shrink-0"></span>
+<span>Strong practical knowledge of <strong>DVC</strong> and <strong>Seldon Core</strong>, demonstrating real-world experience.</span>
+</li>
+<li class="flex gap-3 text-sm text-emerald-700 dark:text-emerald-400">
+<span class="mt-1.5 w-1 h-1 rounded-full bg-emerald-500 flex-shrink-0"></span>
+<span>Clear explanation of the semantic versioning strategy for model deployment pipelines.</span>
+</li>
+<li class="flex gap-3 text-sm text-emerald-700 dark:text-emerald-400">
+<span class="mt-1.5 w-1 h-1 rounded-full bg-emerald-500 flex-shrink-0"></span>
+<span>Excellent articulation of the relationship between data updates and pipeline triggers.</span>
+</li>
+</ul>
+</div>
+<div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-6">
+<div class="flex items-center gap-2 mb-4 text-amber-500">
+<span class="material-icons text-sm">warning</span>
+<h3 class="text-sm font-bold uppercase tracking-wider">Areas for Improvement</h3>
+</div>
+<ul class="space-y-4">
+<li class="flex gap-3 text-sm text-amber-700 dark:text-amber-400">
+<span class="mt-1.5 w-1 h-1 rounded-full bg-amber-500 flex-shrink-0"></span>
+<span>Could provide more detail on specific <strong>quality gates</strong> (e.g., drift detection methods used).</span>
+</li>
+<li class="flex gap-3 text-sm text-amber-700 dark:text-amber-400">
+<span class="mt-1.5 w-1 h-1 rounded-full bg-amber-500 flex-shrink-0"></span>
+<span>Discussion of <strong>Kubeflow</strong> integration was slightly superficial; consider mentioning specific workflow types.</span>
+</li>
+<li class="flex gap-3 text-sm text-amber-700 dark:text-amber-400">
+<span class="mt-1.5 w-1 h-1 rounded-full bg-amber-500 flex-shrink-0"></span>
+<span>Mentioning <strong>Observability</strong> stacks (Prometheus/Grafana) would bolster the 'Scaling' portion of the answer.</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-2 mb-2 text-slate-500">
+<span class="material-icons text-sm">lightbulb</span>
+<h3 class="text-sm font-bold uppercase tracking-wider">Suggested Answers</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+<button class="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+<span class="text-sm font-medium pr-8">"Did you implement any automated quality gates before the model moved from staging to production?"</span>
+<span class="material-icons text-slate-400">expand_more</span>
+</button>
+<div class="p-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+<div class="text-[11px] font-bold text-primary uppercase mb-3">Ideal Answer</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-mono">
+                            "Yes, our automated quality gates included three key stages: 1. Unit/Integration Tests for code changes. 2. Performance Validation where the new model's F1-score/RMSE was compared against the current production baseline on a gold dataset. 3. Data Integrity Checks to ensure no schema drift occurred. Only after passing all three in Staging did the Argo Workflow promote the image to the Seldon production namespace."
+                        </p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+<button class="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+<span class="text-sm font-medium pr-8">"How do you handle versioning for both the models and the data they consume?"</span>
+<span class="material-icons text-slate-400">expand_more</span>
+</button>
+<div class="hidden p-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+</div>
+</div>
+</div>
+<div class="pt-10 flex justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white font-bold py-5 px-12 rounded-xl shadow-2xl shadow-primary/30 transition transform hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3">
+<span class="material-icons">refresh</span>
+                    RESTART NEW SESSION
+                </button>
+</div>
+<div class="h-12"></div>
+</div>
+</div>
+<div class="opacity-10 pointer-events-none select-none">
+<section class="p-6 w-full max-w-5xl mx-auto">
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-icons text-slate-400">work_outline</span>
+<h3 class="font-semibold text-sm">Job Configuration</h3>
+</div>
+</div>
+<div class="p-4">
+<div class="w-full h-32 bg-slate-50 dark:bg-slate-950 border-none rounded-lg p-4"></div>
+</div>
+</div>
+</section>
+<section class="flex-1 px-6 pb-32">
+<div class="max-w-4xl mx-auto space-y-6">
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-800"></div>
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-xl w-3/4"></div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<aside class="w-16 bg-white dark:bg-slate-900/50 border-l border-slate-200 dark:border-slate-800 flex flex-col items-center py-6 gap-6">
+<button class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center group relative">
+<span class="material-icons">insights</span>
+<span class="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Analytics</span>
+</button>
+<button class="w-10 h-10 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center group relative transition">
+<span class="material-icons">code</span>
+<span class="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Snippets</span>
+</button>
+<button class="w-10 h-10 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center group relative transition">
+<span class="material-icons">description</span>
+<span class="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Resume</span>
+</button>
+<div class="mt-auto flex flex-col items-center gap-4">
+<div class="w-1 h-12 bg-slate-200 dark:bg-slate-800 rounded-full">
+<div class="w-full h-2/3 bg-primary rounded-full"></div>
+</div>
+<img alt="Profile" class="w-8 h-8 rounded-full border-2 border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxOFP0lZL1159eV-aRQA15j3tZ38LjTpBenGzQW92fbuSstXQ6-YwBibFotpQZXS_iFClRwdFpEGQ6VC_-KB4mXSHKA-0IsZtFCrmbrhY80JCD74ZMYOS8fgRnXNgESdpotfhXLafLU3WukePQ3WNoNLjRKRUMCdGgB7Qg1kGHRLNZga5ITzrzw5JNhVddY5wDT9BZVuLZ6y2h9TZTiKBqbdMNMHzGBWu_By3B2BCnQ14LXUN8bG4jqreatZyc-rmUDggTI5yvXo7J"/>
+</div>
+</aside>
+
+</body></html>
