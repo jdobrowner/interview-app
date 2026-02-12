@@ -27,6 +27,8 @@ interface AppState {
     config: InterviewConfig;
     job: JobConfig;
     messages: ChatMessage[];
+    theme: 'light' | 'dark';
+    sidebarCollapsed: boolean;
 
     // Actions
     setViewState: (view: ViewState) => void;
@@ -34,6 +36,8 @@ interface AppState {
     setJob: (job: Partial<JobConfig>) => void;
     addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
     clearChat: () => void;
+    toggleTheme: () => void;
+    toggleSidebar: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -55,6 +59,8 @@ Core Responsibilities:
 Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure (GCP/AWS).`,
     },
     messages: [],
+    theme: 'dark',
+    sidebarCollapsed: false,
 
     setViewState: (view) => set({ viewState: view }),
     setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
@@ -70,4 +76,6 @@ Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure
         ],
     })),
     clearChat: () => set({ messages: [] }),
+    toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
+    toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
 }));

@@ -9,7 +9,15 @@ import ActiveView from '../views/ActiveView';
 import EvaluationView from '../views/EvaluationView';
 
 export default function AppShell() {
-    const viewState = useAppStore((state) => state.viewState);
+    const { viewState, theme, sidebarCollapsed } = useAppStore();
+
+    React.useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [theme]);
 
     return (
         <div className="bg-bg-light dark:bg-bg-dark text-slate-900 dark:text-slate-100 font-sans h-screen w-screen flex overflow-hidden">
