@@ -28,7 +28,7 @@ export default function LeftSidebar() {
                 </button>
             </div>
 
-            <div className={`flex-1 overflow-y-auto custom-scrollbar transition-all duration-300 ${sidebarCollapsed ? 'opacity-0 pointer-events-none select-none' : 'opacity-100'
+            <div className={`flex-1 overflow-y-auto overflow-x-hidden transition-all duration-300 ${sidebarCollapsed ? 'opacity-0 pointer-events-none select-none' : 'opacity-100'
                 }`}>
                 <div className="p-6 space-y-8 min-w-[288px]">
                     {/* Model Selection */}

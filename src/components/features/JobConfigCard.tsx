@@ -17,12 +17,13 @@ export default function JobConfigCard() {
 
     const handleAddNew = () => {
         setIsAddingNew(true);
-        setJob({ template: 'Custom', description: '' });
+        setJob({ template: 'Custom', title: '', description: '' });
         setIsCollapsed(false);
     };
 
     const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setJob({ template: e.target.value });
+        const val = e.target.value;
+        setJob({ template: val, title: val });
         setIsAddingNew(false);
     };
 
@@ -42,6 +43,26 @@ export default function JobConfigCard() {
                             <h3 className="font-semibold text-sm">Job Description</h3>
                         </div>
                     </button>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                        <span className="text-[11px] text-slate-500 uppercase font-bold">Templates</span>
+                        <div className="relative">
+                            <select
+                                value={job.template}
+                                disabled={viewState === 'active'}
+                                onChange={handleTemplateChange}
+                                className={`bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-xs py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary appearance-none h-8 flex items-center ${viewState === 'active' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                                    }`}
+                            >
+                                <option>ML Ops Specialist</option>
+                                <option>Senior Frontend Engineer</option>
+                                <option>Backend Architect</option>
+                                <option>Custom</option>
+                            </select>
+                            <span className="material-icons absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-[16px] pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
                     {!isAddingNew && (
                         <button
                             onClick={handleAddNew}
@@ -52,37 +73,43 @@ export default function JobConfigCard() {
                         </button>
                     )}
                 </div>
-                <div className="flex items-center gap-3">
-                    <span className="text-[11px] text-slate-500 uppercase font-bold">Templates</span>
-                    <div className="relative">
-                        <select
-                            value={job.template}
-                            onChange={handleTemplateChange}
-                            className="bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-xs py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary appearance-none cursor-pointer h-8 flex items-center"
-                        >
-                            <option>ML Ops Specialist</option>
-                            <option>Senior Frontend Engineer</option>
-                            <option>Backend Architect</option>
-                            <option>Custom</option>
-                        </select>
-                        <span className="material-icons absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-[16px] pointer-events-none">expand_more</span>
-                    </div>
-                </div>
             </div>
 
             <div className={`transition-all duration-500 ease-in-out ${isCollapsed ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-[2000px] opacity-100'}`}>
                 <div className="p-4 space-y-4">
                     {isAddingNew ? (
-                        <textarea
-                            className="w-full h-64 bg-slate-50 dark:bg-slate-950 border-none rounded-lg p-4 text-sm font-mono text-slate-800 dark:text-slate-200 shadow-inner focus:ring-1 focus:ring-primary/50 resize-none custom-scrollbar transition-colors"
-                            placeholder="Paste Job Description here..."
-                            value={job.description}
-                            autoFocus
-                            onChange={(e) => setJob({ description: e.target.value })}
-                        />
+                        <div className="space-y-4">
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Job Title</label>
+                                <input
+                                    type="text"
+                                    className="w-full bg-slate-50 dark:bg-slate-950 border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-800 dark:text-slate-200 shadow-inner focus:ring-1 focus:ring-primary/50 transition-colors"
+                                    placeholder="e.g. Senior Product Designer"
+                                    value={job.title}
+                                    onChange={(e) => setJob({ title: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Job Description</label>
+                                <textarea
+                                    className="w-full h-64 bg-slate-50 dark:bg-slate-950 border-none rounded-lg p-4 text-sm font-mono text-slate-800 dark:text-slate-200 shadow-inner focus:ring-1 focus:ring-primary/50 resize-none custom-scrollbar transition-colors"
+                                    placeholder="Paste Job Description here..."
+                                    value={job.description}
+                                    onChange={(e) => setJob({ description: e.target.value })}
+                                />
+                            </div>
+                        </div>
                     ) : (
-                        <div className="w-full bg-slate-50/50 dark:bg-slate-950/30 border border-slate-100 dark:border-slate-800/50 rounded-lg p-4 text-sm font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed shadow-sm">
-                            {job.description || "No description selected. Click 'Add New' to paste one."}
+                        <div className="space-y-4">
+                            {job.title && (
+                                <div className="px-4 py-2 bg-primary/5 dark:bg-primary/10 rounded-lg border border-primary/20">
+                                    <p className="text-xs font-bold text-primary uppercase tracking-tighter mb-0.5">Focusing on:</p>
+                                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">{job.title}</h4>
+                                </div>
+                            )}
+                            <div className="w-full bg-slate-50/50 dark:bg-slate-950/30 border border-slate-100 dark:border-slate-800/50 rounded-lg p-4 text-sm font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed shadow-sm">
+                                {job.description || "No description selected. Click 'Add New' to paste one."}
+                            </div>
                         </div>
                     )}
 

@@ -19,6 +19,7 @@ export interface InterviewConfig {
 
 export interface JobConfig {
     template: string;
+    title: string;
     description: string;
 }
 
@@ -51,6 +52,7 @@ export const useAppStore = create<AppState>((set) => ({
     },
     job: {
         template: 'ML Ops Specialist',
+        title: 'ML Ops Specialist',
         description: `Role: ML Ops Specialist
 Core Responsibilities:
 - Design and implement end-to-end ML pipelines using Kubeflow and Argo Workflows.
