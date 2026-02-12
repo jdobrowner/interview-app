@@ -2,6 +2,10 @@
 
 import React from 'react';
 import { useAppStore } from '@/lib/store';
+import { Select } from '@/components/ui/Select';
+import { Slider } from '@/components/ui/Slider';
+import { MODELS, STRATEGIES, DIFFICULTIES } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 export default function LeftSidebar() {
     const { config, setConfig, theme, toggleTheme, toggleSidebar, sidebarCollapsed } = useAppStore();
@@ -32,21 +36,12 @@ export default function LeftSidebar() {
                 }`}>
                 <div className="p-6 space-y-8 min-w-[288px]">
                     {/* Model Selection */}
-                    <div className="space-y-2">
-                        <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Model Selection</label>
-                        <div className="relative">
-                            <select
-                                value={config.model}
-                                onChange={(e) => setConfig({ model: e.target.value })}
-                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm py-2.5 px-3 focus:ring-2 focus:ring-primary appearance-none cursor-pointer h-10"
-                            >
-                                <option>GPT-4o (Omni)</option>
-                                <option>Claude 3.5 Sonnet</option>
-                                <option>Llama 3 70B</option>
-                            </select>
-                            <span className="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">expand_more</span>
-                        </div>
-                    </div>
+                    <Select
+                        label="Model Selection"
+                        value={config.model}
+                        onChange={(e) => setConfig({ model: e.target.value })}
+                        options={[...MODELS]}
+                    />
 
                     {/* Prompt Strategy */}
                     <div className="space-y-2">
@@ -63,32 +58,27 @@ export default function LeftSidebar() {
                                 <span className="material-icons text-base">visibility</span>
                             </button>
                         </div>
-                        <div className="relative">
-                            <select
-                                value={config.strategy}
-                                onChange={(e) => setConfig({ strategy: e.target.value })}
-                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm py-2.5 px-3 focus:ring-2 focus:ring-primary appearance-none cursor-pointer h-10"
-                            >
-                                <option>Chain-of-Thought</option>
-                                <option>Standard Prompting</option>
-                                <option>Few-Shot Examples</option>
-                            </select>
-                            <span className="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">expand_more</span>
-                        </div>
+                        <Select
+                            value={config.strategy}
+                            onChange={(e) => setConfig({ strategy: e.target.value })}
+                            options={[...STRATEGIES]}
+                        />
                     </div>
 
                     {/* Difficulty Level */}
                     <div className="space-y-2">
                         <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Difficulty Level</label>
                         <div className="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
-                            {['Junior', 'Senior', 'Staff'].map((level) => (
+                            {DIFFICULTIES.map((level) => (
                                 <button
                                     key={level}
-                                    onClick={() => setConfig({ difficulty: level as 'Junior' | 'Senior' | 'Staff' })}
-                                    className={`flex-1 text-xs py-1.5 rounded-md transition ${config.difficulty === level
-                                        ? 'bg-white dark:bg-slate-700 shadow-sm font-medium'
-                                        : 'hover:bg-white dark:hover:bg-slate-700'
-                                        }`}
+                                    onClick={() => setConfig({ difficulty: level })}
+                                    className={cn(
+                                        "flex-1 text-xs py-1.5 rounded-md transition cursor-pointer",
+                                        config.difficulty === level
+                                            ? 'bg-white dark:bg-slate-700 shadow-sm font-medium'
+                                            : 'hover:bg-white dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'
+                                    )}
                                 >
                                     {level}
                                 </button>
@@ -98,37 +88,22 @@ export default function LeftSidebar() {
 
                     {/* Sliders */}
                     <div className="space-y-6 pt-2">
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                                <label className="text-[11px] font-semibold text-slate-500 uppercase">Temperature</label>
-                                <span className="font-mono text-xs text-primary font-bold">{config.temperature}</span>
-                            </div>
-                            <input
-                                className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer"
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                value={config.temperature}
-                                onChange={(e) => setConfig({ temperature: parseFloat(e.target.value) })}
-                            />
-                        </div>
-
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                                <label className="text-[11px] font-semibold text-slate-500 uppercase">Top-P</label>
-                                <span className="font-mono text-xs text-primary font-bold">{config.topP}</span>
-                            </div>
-                            <input
-                                className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer"
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.05"
-                                value={config.topP}
-                                onChange={(e) => setConfig({ topP: parseFloat(e.target.value) })}
-                            />
-                        </div>
+                        <Slider
+                            label="Temperature"
+                            value={config.temperature}
+                            min="0"
+                            max="1"
+                            step="0.1"
+                            onChange={(e) => setConfig({ temperature: parseFloat(e.target.value) })}
+                        />
+                        <Slider
+                            label="Top-P"
+                            value={config.topP}
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            onChange={(e) => setConfig({ topP: parseFloat(e.target.value) })}
+                        />
                     </div>
                 </div>
             </div>
