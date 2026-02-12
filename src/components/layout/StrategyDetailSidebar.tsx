@@ -3,30 +3,8 @@
 import React from 'react';
 import { useAppStore } from '@/lib/store';
 
-const PROMPT_TEXTS: Record<string, string> = {
-    'Chain-of-Thought': `You are an expert technical interviewer. Use Chain-of-Thought prompting to evaluate candidates. 
-    
-Before asking a question, break down the core competencies you want to test. 
-After the candidate responds, internalize their logic, identify gaps, and then provide a follow-up that probes deeper into the specific area they seemed least confident about.
-
-Always explain your reasoning internally before generating the output message.`,
-    'Standard Prompting': `You are a professional technical interviewer. Your goal is to conduct a realistic simulation of a technical phone screen.
-
-Ask one clear, concise question at a time. 
-Listen to the user's response and provide immediate feedback or a natural follow-up question as a real interviewer would.
-Maintain a high bar for technical accuracy and communication clarity.`,
-    'Few-Shot Examples': `You are a technical interviewer following a structured rubric.
-
-Example 1:
-User: "I use React for everything."
-Interviewer: "That's great for frontend. How do you handle state management in large scale applications specifically to avoid prop drilling?"
-
-Example 2:
-User: "We use a monolithic architecture."
-Interviewer: "What were the primary drivers for that decision over microservices, and how do you manage database scaling in that setup?"
-
-Now, continue the interview focusing on the provided job description.`
-};
+import { PROMPT_TEXTS } from '@/lib/constants';
+import { Button } from '@/components/ui/Button';
 
 export default function StrategyDetailSidebar() {
     const { config, strategySidebarOpen, toggleStrategySidebar, sidebarCollapsed } = useAppStore();
@@ -45,12 +23,14 @@ export default function StrategyDetailSidebar() {
                         <h2 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Prompt Detail</h2>
                         <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">{config.strategy}</h3>
                     </div>
-                    <button
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={toggleStrategySidebar}
-                        className="w-8 h-8 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center justify-center text-slate-500 transition-colors cursor-pointer"
+                        className="rounded-full"
                     >
                         <span className="material-icons text-xl">close</span>
-                    </button>
+                    </Button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">

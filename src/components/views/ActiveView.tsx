@@ -3,9 +3,18 @@
 import React, { useState } from 'react';
 import JobConfigCard from '../features/JobConfigCard';
 import { useAppStore } from '@/lib/store';
+import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
 
 export default function ActiveView() {
-    const { messages, addMessage, setViewState } = useAppStore();
+    const {
+        messages,
+        addMessage,
+        setViewState,
+        saveCurrentSession,
+        isRecording,
+        toggleRecording
+    } = useAppStore();
     const [input, setInput] = useState('');
 
     // Sample data if no messages
@@ -92,8 +101,14 @@ export default function ActiveView() {
                                 }
                             }}
                         />
-                        <button className="absolute left-4 bottom-4 text-slate-400 hover:text-primary transition cursor-pointer">
-                            <span className="material-icons">mic</span>
+                        <button
+                            onClick={toggleRecording}
+                            className={cn(
+                                "absolute left-4 bottom-4 transition cursor-pointer",
+                                isRecording ? "text-red-500 scale-110 animate-pulse" : "text-slate-400 hover:text-primary"
+                            )}
+                        >
+                            <span className="material-icons">{isRecording ? 'mic' : 'mic_none'}</span>
                         </button>
                         <button
                             onClick={handleSend}
@@ -102,12 +117,16 @@ export default function ActiveView() {
                             <span className="material-icons text-sm">send</span>
                         </button>
                     </div>
-                    <button
-                        onClick={() => setViewState('evaluation')}
-                        className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-6 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition flex-shrink-0 cursor-pointer"
+                    <Button
+                        variant="danger"
+                        onClick={() => {
+                            saveCurrentSession();
+                            setViewState('evaluation');
+                        }}
+                        className="px-6 py-4 text-xs tracking-widest uppercase flex-shrink-0"
                     >
                         Finish Interview
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>

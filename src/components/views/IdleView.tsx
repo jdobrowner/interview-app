@@ -3,6 +3,7 @@
 import React from 'react';
 import JobConfigCard from '../features/JobConfigCard';
 import { useAppStore } from '@/lib/store';
+import { Button } from '@/components/ui/Button';
 
 export default function IdleView() {
     const setViewState = useAppStore((state) => state.setViewState);
@@ -51,38 +52,16 @@ export default function IdleView() {
                             Refine your technical communication with GPT-powered simulations tailored to your specific job requirements.
                         </p>
 
-                        <button
+                        <Button
+                            size="lg"
                             onClick={() => setViewState('active')}
-                            className="inline-flex items-center gap-3 bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-[1.02] shadow-xl shadow-primary/20 active:scale-95 cursor-pointer"
+                            className="inline-flex items-center gap-3"
                         >
                             <span className="material-symbols-outlined text-xl">play_circle</span>
                             Start Practice Session
-                        </button>
+                        </Button>
                     </div>
                 </section>
-            </div>
-
-            {/* Bottom sticky bar (Idle state: disabled) */}
-            <div className="mt-auto p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent z-20">
-                <div className="max-w-4xl mx-auto flex items-center gap-4">
-                    <div className="flex-1 relative">
-                        <textarea
-                            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-12 pr-12 text-sm text-slate-400 dark:text-slate-600 transition resize-none custom-scrollbar cursor-not-allowed"
-                            disabled
-                            placeholder="Configure your interview above to start chatting..."
-                            rows={1}
-                        />
-                        <button className="absolute left-4 bottom-4 text-slate-300 dark:text-slate-700 cursor-not-allowed" disabled>
-                            <span className="material-icons">mic_off</span>
-                        </button>
-                        <button className="absolute right-4 bottom-3.5 w-8 h-8 bg-slate-200 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600 cursor-not-allowed" disabled>
-                            <span className="material-icons text-sm">send</span>
-                        </button>
-                    </div>
-                    <button className="bg-slate-100 dark:bg-slate-900/40 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-xl text-xs font-bold uppercase tracking-widest cursor-not-allowed flex-shrink-0" disabled>
-                        Finish Interview
-                    </button>
-                </div>
             </div>
         </div>
     );

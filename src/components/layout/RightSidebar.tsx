@@ -1,24 +1,41 @@
 'use client';
 
-import React from 'react';
+import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
+import { useAppStore } from '@/lib/store';
 
 export default function RightSidebar() {
+    const { toggleHistorySidebar } = useAppStore();
+
     return (
         <aside className="w-16 bg-white dark:bg-slate-900/50 border-l border-slate-200 dark:border-slate-800 flex flex-col items-center py-6 gap-6">
-            <button className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800/50 text-slate-400 flex items-center justify-center group relative opacity-50">
-                <span className="material-icons">insights</span>
-                <span className="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Analytics</span>
-            </button>
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleHistorySidebar}
+                className="group relative"
+            >
+                <span className="material-icons">history</span>
+                <span className="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition whitespace-nowrap">History</span>
+            </Button>
 
-            <button className="w-10 h-10 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center group relative transition">
+            <Button
+                variant="ghost"
+                size="icon"
+                className="group relative"
+            >
                 <span className="material-icons">code</span>
-                <span className="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Snippets</span>
-            </button>
+                <span className="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition whitespace-nowrap">Snippets</span>
+            </Button>
 
-            <button className="w-10 h-10 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center group relative transition">
+            <Button
+                variant="ghost"
+                size="icon"
+                className="group relative"
+            >
                 <span className="material-icons">description</span>
-                <span className="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">Resume</span>
-            </button>
+                <span className="absolute right-14 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition whitespace-nowrap">Resume</span>
+            </Button>
 
             <div className="mt-auto flex flex-col items-center gap-4">
                 <div className="w-1 h-12 bg-slate-200 dark:bg-slate-800 rounded-full">

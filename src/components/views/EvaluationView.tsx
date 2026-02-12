@@ -4,7 +4,7 @@ import React from 'react';
 import { useAppStore } from '@/lib/store';
 
 export default function EvaluationView() {
-    const { setViewState, clearChat } = useAppStore();
+    const { setViewState, clearChat, job } = useAppStore();
 
     const handleRestart = () => {
         clearChat();
@@ -17,7 +17,7 @@ export default function EvaluationView() {
                 <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-8">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Performance Report</h1>
-                        <p className="text-slate-500 text-sm mt-1">Interview Session: ML Ops Specialist (Simulation Complete)</p>
+                        <p className="text-slate-500 text-sm mt-1">Interview Session: {job.title} (Simulation Complete)</p>
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="text-right">
