@@ -2,57 +2,74 @@
 
 @theme {
   --color-primary: #2547f4;
-  --color-background-light: #f5f6f8;
-  --color-background-dark: #101322;
-  
-  --font-display: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  
-  --radius-default: 0.25rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  --color-bg-light: #f5f6f8;
+  --color-bg-dark: #101322;
+
+  --font-display: var(--font-inter), "Inter", sans-serif;
+  --font-mono-custom: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
 }
 
+/* Standard CSS fallbacks for layout stability */
 :root {
   --primary: #2547f4;
-  --background-light: #f5f6f8;
-  --background-dark: #101322;
-  --slate-200: #e2e8f0;
-  --slate-800: #1e293b;
-  --slate-900: #0f172a;
+  --bg-light: #f5f6f8;
+  --bg-dark: #101322;
 }
 
-@layer base {
-  body {
-    @apply bg-[var(--background-light)] dark:bg-[var(--background-dark)] text-slate-900 dark:text-slate-100 font-sans h-screen flex overflow-hidden;
-    font-family: var(--font-display);
-  }
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-@layer components {
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #2d3748;
-    border-radius: 10px;
-  }
-  
-  .hero-gradient {
-    background: radial-gradient(circle at center, rgba(37, 71, 244, 0.15) 0%, rgba(168, 85, 247, 0.1) 40%, transparent 70%);
-  }
-  
-  .node-pulse {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
+body {
+  background-color: var(--bg-light);
+  color: #0f172a;
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background-color: var(--bg-dark);
+  color: #f1f5f9;
+}
+
+/* Custom Component Classes */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #2d3748;
+  border-radius: 10px;
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at center, rgba(37, 71, 244, 0.15) 0%, rgba(168, 85, 247, 0.1) 40%, transparent 70%);
+}
+
+.node-pulse {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
 }
 
 input[type="range"] {

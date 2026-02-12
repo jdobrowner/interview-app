@@ -61,7 +61,7 @@ export default function IdleView() {
             </section>
 
             {/* Bottom sticky bar (Idle state: disabled) */}
-            <div className="p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent">
+            <div className="p-6 bg-gradient-to-t from-bg-light dark:from-bg-dark via-bg-light dark:via-bg-dark to-transparent">
                 <div className="max-w-4xl mx-auto flex items-end gap-4">
                     <div className="flex-1 relative">
                         <textarea

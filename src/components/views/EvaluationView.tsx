@@ -12,7 +12,7 @@ export default function EvaluationView() {
     };
 
     return (
-        <div className="absolute inset-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md overflow-y-auto custom-scrollbar">
+        <div className="flex-1 h-full w-full z-50 bg-bg-light dark:bg-bg-dark overflow-y-auto custom-scrollbar">
             <div className="max-w-5xl mx-auto py-12 px-6 space-y-10">
                 <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-8">
                     <div>

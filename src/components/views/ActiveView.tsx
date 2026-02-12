@@ -58,8 +58,8 @@ export default function ActiveView() {
                                     {msg.role === 'assistant' ? msg.timestamp : 'You'}
                                 </div>
                                 <div className={`p-4 rounded-xl border text-sm leading-relaxed ${msg.role === 'user'
-                                        ? 'bg-primary/5 dark:bg-primary/10 border-primary/40 rounded-tr-none text-left dark:text-slate-200'
-                                        : 'bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 rounded-tl-none dark:text-slate-300'
+                                    ? 'bg-primary/5 dark:bg-primary/10 border-primary/40 rounded-tr-none text-left dark:text-slate-200'
+                                    : 'bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 rounded-tl-none dark:text-slate-300'
                                     }`}>
                                     {msg.content}
                                 </div>
@@ -70,7 +70,8 @@ export default function ActiveView() {
             </section>
 
             {/* Bottom Sticky Bar */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent">
+            {/* Bottom Sticky Bar */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-bg-light dark:from-bg-dark via-bg-light dark:via-bg-dark to-transparent">
                 <div className="max-w-4xl mx-auto flex items-end gap-4">
                     <div className="flex-1 relative group">
                         <textarea

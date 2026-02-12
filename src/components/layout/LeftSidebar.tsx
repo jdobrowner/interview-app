@@ -4,7 +4,7 @@ import React from 'react';
 import { useAppStore } from '@/lib/store';
 
 export default function LeftSidebar() {
-    const { config, setConfig, viewState } = useAppStore();
+    const { config, setConfig } = useAppStore();
 
     return (
         <aside className="w-72 bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full z-20">
@@ -54,7 +54,7 @@ export default function LeftSidebar() {
                         {['Junior', 'Senior', 'Staff'].map((level) => (
                             <button
                                 key={level}
-                                onClick={() => setConfig({ difficulty: level as any })}
+                                onClick={() => setConfig({ difficulty: level as 'Junior' | 'Senior' | 'Staff' })}
                                 className={`flex-1 text-xs py-1.5 rounded-md transition ${config.difficulty === level
                                     ? 'bg-white dark:bg-slate-700 shadow-sm font-medium'
                                     : 'hover:bg-white dark:hover:bg-slate-700'
