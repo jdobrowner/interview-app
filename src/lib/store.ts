@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 // --- Global Types ---
 
-export type ViewState = 'idle' | 'active' | 'evaluation';
+export type ViewState = 'idle' | 'active' | 'evaluation' | 'history';
 
 export interface ChatMessage {
     id: string;

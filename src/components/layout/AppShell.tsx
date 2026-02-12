@@ -9,6 +9,7 @@ import { useAppStore } from '@/lib/store';
 import IdleView from '../views/IdleView';
 import ActiveView from '../views/ActiveView';
 import EvaluationView from '../views/EvaluationView';
+import HistoryView from '../views/HistoryView';
 
 export default function AppShell() {
     const { viewState, theme, sidebarCollapsed } = useAppStore();
@@ -23,14 +24,15 @@ export default function AppShell() {
 
     return (
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans h-screen w-screen flex overflow-hidden">
-            {viewState !== 'evaluation' && <LeftSidebar />}
-            {viewState !== 'evaluation' && <StrategyDetailSidebar />}
+            {(viewState !== 'evaluation' && viewState !== 'history') && <LeftSidebar />}
+            {(viewState !== 'evaluation' && viewState !== 'history') && <StrategyDetailSidebar />}
             <HistorySidebar />
 
             <main className="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative overflow-hidden">
                 {viewState === 'idle' && <IdleView />}
                 {viewState === 'active' && <ActiveView />}
                 {viewState === 'evaluation' && <EvaluationView />}
+                {viewState === 'history' && <HistoryView />}
             </main>
 
             <RightSidebar />

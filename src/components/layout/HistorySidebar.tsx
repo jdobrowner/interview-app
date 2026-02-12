@@ -86,7 +86,17 @@ export default function HistorySidebar() {
                     )}
                 </div>
 
-                <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+                <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-4">
+                    <Button
+                        className="w-full text-xs"
+                        size="sm"
+                        onClick={() => {
+                            setViewState('history');
+                            toggleHistorySidebar();
+                        }}
+                    >
+                        View All History
+                    </Button>
                     <p className="text-[10px] text-slate-400 italic text-center leading-relaxed">
                         History is stored locally in your browser and persists across refreshes.
                     </p>
