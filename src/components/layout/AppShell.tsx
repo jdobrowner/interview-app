@@ -3,6 +3,7 @@
 import React from 'react';
 import LeftSidebar from './LeftSidebar';
 import RightSidebar from './RightSidebar';
+import StrategyDetailSidebar from './StrategyDetailSidebar';
 import { useAppStore } from '@/lib/store';
 import IdleView from '../views/IdleView';
 import ActiveView from '../views/ActiveView';
@@ -22,6 +23,7 @@ export default function AppShell() {
     return (
         <div className="bg-bg-light dark:bg-bg-dark text-slate-900 dark:text-slate-100 font-sans h-screen w-screen flex overflow-hidden">
             {viewState !== 'evaluation' && <LeftSidebar />}
+            {viewState !== 'evaluation' && <StrategyDetailSidebar />}
 
             <main className="flex-1 flex flex-col min-w-0 bg-bg-light dark:bg-bg-dark relative overflow-hidden">
                 {viewState === 'idle' && <IdleView />}

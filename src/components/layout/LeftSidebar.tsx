@@ -7,9 +7,9 @@ export default function LeftSidebar() {
     const { config, setConfig, theme, toggleTheme, toggleSidebar, sidebarCollapsed } = useAppStore();
 
     return (
-        <aside className={`bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full z-20 transition-all duration-300 overflow-hidden ${sidebarCollapsed ? 'w-16' : 'w-72'
+        <aside className={`bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full z-50 transition-all duration-300 overflow-hidden ${sidebarCollapsed ? 'w-16' : 'w-72'
             }`}>
-            <div className={`p-6 border-b border-slate-200 dark:border-slate-800 flex items-center shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'
+            <div className={`p-6 h-[73px] border-b border-slate-200 dark:border-slate-800 flex items-center shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'
                 }`}>
                 {!sidebarCollapsed && (
                     <h2 className="text-xs font-bold uppercase tracking-widest text-primary truncate animate-in fade-in duration-500">
@@ -50,7 +50,19 @@ export default function LeftSidebar() {
 
                     {/* Prompt Strategy */}
                     <div className="space-y-2">
-                        <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Prompt Strategy</label>
+                        <div className="flex items-center justify-between">
+                            <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">Prompt Strategy</label>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    useAppStore.getState().toggleStrategySidebar();
+                                }}
+                                className="text-slate-400 hover:text-primary transition-colors cursor-pointer"
+                                title="View Strategy Detail"
+                            >
+                                <span className="material-icons text-base">visibility</span>
+                            </button>
+                        </div>
                         <div className="relative">
                             <select
                                 value={config.strategy}

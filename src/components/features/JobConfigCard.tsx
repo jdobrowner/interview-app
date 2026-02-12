@@ -101,12 +101,6 @@ export default function JobConfigCard() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {job.title && (
-                                <div className="px-4 py-2 bg-primary/5 dark:bg-primary/10 rounded-lg border border-primary/20">
-                                    <p className="text-xs font-bold text-primary uppercase tracking-tighter mb-0.5">Focusing on:</p>
-                                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">{job.title}</h4>
-                                </div>
-                            )}
                             <div className="w-full bg-slate-50/50 dark:bg-slate-950/30 border border-slate-100 dark:border-slate-800/50 rounded-lg p-4 text-sm font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed shadow-sm">
                                 {job.description || "No description selected. Click 'Add New' to paste one."}
                             </div>

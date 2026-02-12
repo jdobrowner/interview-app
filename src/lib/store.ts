@@ -30,6 +30,7 @@ interface AppState {
     messages: ChatMessage[];
     theme: 'light' | 'dark';
     sidebarCollapsed: boolean;
+    strategySidebarOpen: boolean;
 
     // Actions
     setViewState: (view: ViewState) => void;
@@ -39,6 +40,7 @@ interface AppState {
     clearChat: () => void;
     toggleTheme: () => void;
     toggleSidebar: () => void;
+    toggleStrategySidebar: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -63,6 +65,7 @@ Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure
     messages: [],
     theme: 'dark',
     sidebarCollapsed: false,
+    strategySidebarOpen: false,
 
     setViewState: (view) => set({ viewState: view }),
     setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
@@ -80,4 +83,5 @@ Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure
     clearChat: () => set({ messages: [] }),
     toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
     toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+    toggleStrategySidebar: () => set((state) => ({ strategySidebarOpen: !state.strategySidebarOpen })),
 }));
