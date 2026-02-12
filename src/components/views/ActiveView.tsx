@@ -16,6 +16,7 @@ export default function ActiveView() {
         toggleRecording
     } = useAppStore();
     const [input, setInput] = useState('');
+    const [isAiThinking, setIsAiThinking] = useState(false);
 
     // Sample data if no messages
     const displayMessages = messages.length > 0 ? messages : [
@@ -39,10 +40,36 @@ export default function ActiveView() {
         }
     ];
 
-    const handleSend = () => {
-        if (!input.trim()) return;
-        addMessage({ role: 'user', content: input });
+    const handleSend = async () => {
+        if (!input.trim() || isAiThinking) return;
+
+        // 1. Add User Message
+        const userMsg = input;
+        addMessage({ role: 'user', content: userMsg });
         setInput('');
+        setIsAiThinking(true);
+
+        // 2. Simulate AI Delay (Thinking)
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // 3. Create placeholder for AI response
+        addMessage({ role: 'assistant', content: '' });
+
+        // 4. Stream response
+        setIsAiThinking(false); // Thinking done, speaking starts
+
+        // Dynamic import to avoid SSR issues if any
+        const { simulateStreamingResponse } = await import('@/lib/ai/mockStream');
+
+        const stream = simulateStreamingResponse(
+            "That's a solid foundation. Using semantic tagging for rollbacks is a best practice. I'm curious about the 'automated quality gates' you mentioned – could you elaborate on what specific metrics you tracked (e.g. drift detection, latency) before promoting a model to production?",
+            40
+        );
+
+        for await (const chunk of stream) {
+            // Update the last message with new content using the store action
+            useAppStore.getState().updateLastMessage(chunk);
+        }
     };
 
     return (

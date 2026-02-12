@@ -66,7 +66,8 @@ interface InterviewSlice {
     setViewState: (view: ViewState) => void;
     setConfig: (config: Partial<InterviewConfig>) => void;
     setJob: (job: Partial<JobConfig>) => void;
-    addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
+    addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'> | ChatMessage) => void;
+    updateLastMessage: (content: string) => void;
     clearChat: () => void;
 }
 
@@ -131,12 +132,23 @@ Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure
         messages: [
             ...state.messages,
             {
-                ...message,
                 id: Math.random().toString(36).substring(7),
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                ...message,
             },
         ],
     })),
+    updateLastMessage: (content) => set((state) => {
+        const messages = [...state.messages];
+        if (messages.length > 0) {
+            const lastMsg = messages[messages.length - 1];
+            messages[messages.length - 1] = {
+                ...lastMsg,
+                content: lastMsg.content + content
+            };
+        }
+        return { messages };
+    }),
     clearChat: () => set({ messages: [] }),
 });
 
