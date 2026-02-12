@@ -34,7 +34,7 @@ export default function HistorySidebar() {
     return (
         <div
             className={cn(
-                "fixed inset-y-0 z-50 w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-500 ease-in-out transform right-0",
+                "fixed inset-y-0 z-[100] w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-500 ease-in-out transform right-0",
                 historySidebarOpen ? "translate-x-0" : "translate-x-full"
             )}
         >

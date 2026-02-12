@@ -24,8 +24,8 @@ export default function AppShell() {
 
     return (
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans h-screen w-screen flex overflow-hidden">
-            {(viewState !== 'evaluation' && viewState !== 'history') && <LeftSidebar />}
-            {(viewState !== 'evaluation' && viewState !== 'history') && <StrategyDetailSidebar />}
+            <LeftSidebar />
+            <StrategyDetailSidebar />
             <HistorySidebar />
 
             <main className="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative overflow-hidden">
