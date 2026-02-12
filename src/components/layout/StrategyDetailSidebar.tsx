@@ -40,7 +40,7 @@ export default function StrategyDetailSidebar() {
                 }`}
         >
             <div className="h-full flex flex-col">
-                <div className="p-6 h-[73px] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/20">
+                <div className="p-6 h-[73px] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/80">
                     <div>
                         <h2 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Prompt Detail</h2>
                         <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">{config.strategy}</h3>

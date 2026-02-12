@@ -21,11 +21,11 @@ export default function AppShell() {
     }, [theme]);
 
     return (
-        <div className="bg-bg-light dark:bg-bg-dark text-slate-900 dark:text-slate-100 font-sans h-screen w-screen flex overflow-hidden">
+        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans h-screen w-screen flex overflow-hidden">
             {viewState !== 'evaluation' && <LeftSidebar />}
             {viewState !== 'evaluation' && <StrategyDetailSidebar />}
 
-            <main className="flex-1 flex flex-col min-w-0 bg-bg-light dark:bg-bg-dark relative overflow-hidden">
+            <main className="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative overflow-hidden">
                 {viewState === 'idle' && <IdleView />}
                 {viewState === 'active' && <ActiveView />}
                 {viewState === 'evaluation' && <EvaluationView />}

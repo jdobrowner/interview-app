@@ -2,18 +2,20 @@
 
 @theme {
   --color-primary: #2547f4;
-  --color-bg-light: #f5f6f8;
-  --color-bg-dark: #101322;
+  --color-background-light: #f5f6f8;
+  --color-background-dark: #101322;
 
   --font-display: var(--font-inter), "Inter", sans-serif;
   --font-mono-custom: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Standard CSS fallbacks for layout stability */
 :root {
   --primary: #2547f4;
-  --bg-light: #f5f6f8;
-  --bg-dark: #101322;
+  --background-light: #f5f6f8;
+  --background-dark: #101322;
 }
 
 html,
@@ -26,7 +28,7 @@ body {
 }
 
 body {
-  background-color: var(--bg-light);
+  background-color: var(--background-light);
   color: #0f172a;
   font-family: var(--font-display);
   -webkit-font-smoothing: antialiased;
@@ -34,7 +36,7 @@ body {
 }
 
 .dark body {
-  background-color: var(--bg-dark);
+  background-color: var(--background-dark);
   color: #f1f5f9;
 }
 

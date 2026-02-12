@@ -135,7 +135,7 @@ export default function LeftSidebar() {
 
             <div className={`shrink-0 transition-all duration-300 ${sidebarCollapsed
                 ? 'max-h-0 opacity-0 pointer-events-none overflow-hidden'
-                : 'p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 max-h-40 opacity-100'
+                : 'p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/80 max-h-40 opacity-100'
                 }`}>
                 <div className="flex items-center justify-between min-w-[240px]">
                     <div className="flex items-center gap-3">

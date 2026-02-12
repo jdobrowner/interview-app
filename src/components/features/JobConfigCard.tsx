@@ -83,7 +83,7 @@ export default function JobConfigCard() {
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Job Title</label>
                                 <input
                                     type="text"
-                                    className="w-full bg-slate-50 dark:bg-slate-950 border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-800 dark:text-slate-200 shadow-inner focus:ring-1 focus:ring-primary/50 transition-colors"
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-800 dark:text-slate-200 shadow-inner focus:ring-1 focus:ring-primary/50 transition-colors"
                                     placeholder="e.g. Senior Product Designer"
                                     value={job.title}
                                     onChange={(e) => setJob({ title: e.target.value })}

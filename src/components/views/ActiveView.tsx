@@ -76,7 +76,7 @@ export default function ActiveView() {
             </div>
 
             {/* Bottom Sticky Bar - Absolute positioning to stay fixed over scroll area */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-bg-light dark:from-bg-dark via-bg-light dark:via-bg-dark to-transparent z-20">
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent z-20">
                 <div className="max-w-4xl mx-auto flex items-center gap-4">
                     <div className="flex-1 relative group">
                         <textarea
