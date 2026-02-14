@@ -3,13 +3,13 @@
 import React from 'react';
 import { useAppStore } from '@/lib/store';
 
-import { PROMPT_TEXTS } from '@/lib/constants';
+import { SYSTEM_PROMPTS } from '@/lib/ai/systemPrompts';
 import { Button } from '@/components/ui/Button';
 
 export default function StrategyDetailSidebar() {
     const { config, strategySidebarOpen, toggleStrategySidebar, sidebarCollapsed } = useAppStore();
 
-    const promptText = PROMPT_TEXTS[config.strategy] || PROMPT_TEXTS['Standard Prompting'];
+    const promptText = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS['Standard Prompting'];
 
     return (
         <div
