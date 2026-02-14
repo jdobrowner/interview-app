@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import JobConfigCard from '../features/JobConfigCard';
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
@@ -15,28 +15,54 @@ export default function ActiveView() {
     } = useAppStore();
     const [input, setInput] = useState('');
     const [isAiThinking, setIsAiThinking] = useState(false);
+    const hasInitialized = useRef(false);
 
-    // Sample data if no messages
-    const displayMessages = messages.length > 0 ? messages : [
-        {
-            id: '1',
-            role: 'assistant',
-            content: "Hello! I've reviewed the ML Ops Specialist role. To start our simulation, could you walk me through your experience building and scaling model deployment pipelines? Specifically, how do you handle versioning for both the models and the data they consume?",
-            timestamp: '10:42 AM'
-        },
-        {
-            id: '2',
-            role: 'user',
-            content: "In my previous role, I utilized DVC for data versioning integrated directly into our Git workflow. For model deployment, we used Seldon Core on Kubernetes. Every time a new model was trained, it was assigned a semantic version tag in our container registry, which allowed us to perform canary deployments and easy rollbacks if needed.",
-            timestamp: '10:44 AM'
-        },
-        {
-            id: '3',
-            role: 'assistant',
-            content: "Interesting approach with DVC. How did you manage the orchestration when a data update triggered a pipeline re-run? Did you implement any automated quality gates before the model moved from staging to production?",
-            timestamp: '10:45 AM'
+    // When the interview starts, have the AI send an opening question
+    useEffect(() => {
+        if (messages.length === 0 && !hasInitialized.current) {
+            hasInitialized.current = true;
+            triggerOpeningQuestion();
         }
-    ];
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const triggerOpeningQuestion = async () => {
+        setIsAiThinking(true);
+        addMessage({ role: 'assistant', content: '' });
+
+        const { config, job } = useAppStore.getState();
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages: [{ role: 'user', content: 'Please begin the interview.' }],
+                    config,
+                    job,
+                }),
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch opening question');
+
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            if (!reader) throw new Error('No reader available');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                useAppStore.getState().updateLastMessage(chunk);
+            }
+        } catch (error) {
+            console.error('Error getting opening question:', error);
+            useAppStore.getState().updateLastMessage(
+                "Hello! I'm ready to begin your interview simulation. Could you start by telling me about your background and experience relevant to this role?"
+            );
+        } finally {
+            setIsAiThinking(false);
+        }
+    };
 
     const handleSend = async () => {
         if (!input.trim() || isAiThinking) return;
@@ -51,6 +77,7 @@ export default function ActiveView() {
         try {
             const guardRes = await fetch('/api/guard', {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: userMsg }),
             });
             const guardData = await guardRes.json();
@@ -80,6 +107,7 @@ export default function ActiveView() {
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     messages,
                     config,
@@ -119,7 +147,7 @@ export default function ActiveView() {
                 {/* Chat Workspace */}
                 <section className="px-6">
                     <div className="max-w-4xl mx-auto space-y-6">
-                        {displayMessages.map((msg) => (
+                        {messages.map((msg) => (
                             <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-primary/20 border border-primary/30' : 'bg-slate-200 dark:bg-slate-800'
                                     }`}>
@@ -137,7 +165,13 @@ export default function ActiveView() {
                                         ? 'bg-primary/5 dark:bg-primary/10 border-primary/40 rounded-tr-none text-left dark:text-slate-200'
                                         : 'bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 rounded-tl-none dark:text-slate-300'
                                         }`}>
-                                        {msg.content}
+                                        {msg.content || (
+                                            <span className="inline-flex items-center gap-1.5 text-slate-400">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                             </div>

@@ -215,8 +215,6 @@ export const useAppStore = create<RootState>()(
                 config: state.config,
                 job: state.job,
                 sessions: state.sessions,
-                viewState: state.viewState,
-                messages: state.messages,
                 customJobs: state.customJobs,
             }),
         }

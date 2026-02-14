@@ -6,7 +6,12 @@ import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
 
 export default function IdleView() {
-    const setViewState = useAppStore((state) => state.setViewState);
+    const { setViewState, clearChat } = useAppStore();
+
+    const handleStart = () => {
+        clearChat();
+        setViewState('active');
+    };
 
     return (
         <div className="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar relative">
@@ -54,7 +59,7 @@ export default function IdleView() {
 
                         <Button
                             size="lg"
-                            onClick={() => setViewState('active')}
+                            onClick={handleStart}
                             className="inline-flex items-center gap-3"
                         >
                             <span className="material-symbols-outlined text-xl">play_circle</span>
