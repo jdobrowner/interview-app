@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         const systemPrompt = buildSystemPrompt(job, config);
 
         const result = streamText({
-            model: google('gemini-3-flash'),
+            model: google('gemini-3-flash-preview'),
             system: systemPrompt,
             messages: messages.map((m: any) => ({
                 role: m.role,

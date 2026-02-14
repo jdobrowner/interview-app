@@ -10,8 +10,8 @@ The application uses three specialized Gemini models, each optimized for a diffe
 
 | Stage | Model | Purpose |
 |:---|:---|:---|
-| **Interviewer** | `gemini-3-flash` | Low-latency streaming chat for realistic conversational flow |
-| **Coach** | `gemini-3-pro` | Deep reasoning for post-session transcript analysis and scoring |
+| **Interviewer** | `gemini-3-flash-preview` | Low-latency streaming chat for realistic conversational flow |
+| **Coach** | `gemini-3-flash-preview` | Deep reasoning for post-session transcript analysis and scoring |
 | **Shield** | `gemini-2.5-flash-lite` | Ultra-fast input classification to guard against misuse |
 
 ### 💬 Streaming Interview Chat
@@ -41,7 +41,7 @@ Every user message is pre-screened by `gemini-2.5-flash-lite` before reaching th
 
 ### 📊 AI-Powered Performance Evaluation
 
-When the user clicks "Finish Interview," the entire transcript is sent to `gemini-3-pro` for deep analysis. The model returns structured JSON with:
+When the user clicks "Finish Interview," the entire transcript is sent to `gemini-3-flash-preview` for deep analysis. The model returns structured JSON with:
 
 - **Overall Score** (0–100)
 - **Technical Depth Score** (0–100)
@@ -107,8 +107,8 @@ Every completed interview is automatically saved with its full transcript, job c
 src/
 ├── app/
 │   ├── api/
-│   │   ├── chat/route.ts          # Interviewer — gemini-3-flash streaming
-│   │   ├── evaluate/route.ts      # Coach — gemini-3-pro evaluation
+│   │   ├── chat/route.ts          # Interviewer — gemini-3-flash-preview streaming
+│   │   ├── evaluate/route.ts      # Coach — gemini-3-flash-preview evaluation
 │   │   └── guard/route.ts         # Shield — gemini-2.5-flash-lite guard
 │   ├── layout.tsx
 │   ├── page.tsx

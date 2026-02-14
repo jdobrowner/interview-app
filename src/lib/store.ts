@@ -110,7 +110,7 @@ const createUISlice: StateCreator<RootState, [["zustand/persist", unknown]], [],
 const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown]], [], InterviewSlice> = (set) => ({
     viewState: 'idle',
     config: {
-        model: 'Gemini 3 Flash',
+        model: 'Gemini 3 Flash Preview',
         strategy: 'Comprehensive Technical Screen',
         difficulty: 'Senior',
         temperature: 0.7,
@@ -210,8 +210,6 @@ export const useAppStore = create<RootState>()(
             partialize: (state) => ({
                 theme: state.theme,
                 sidebarCollapsed: state.sidebarCollapsed,
-                strategySidebarOpen: state.strategySidebarOpen,
-                historySidebarOpen: state.historySidebarOpen,
                 config: state.config,
                 job: state.job,
                 sessions: state.sessions,

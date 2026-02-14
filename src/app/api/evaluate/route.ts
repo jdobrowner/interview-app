@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         const evaluationPrompt = buildEvaluationPrompt(job, config, messages);
 
         const { text } = await generateText({
-            model: google('gemini-3-pro'),
+            model: google('gemini-3-flash-preview'),
             prompt: evaluationPrompt,
         });
 

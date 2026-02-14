@@ -1,6 +1,5 @@
 export const MODELS = [
-    'Gemini 3 Flash',
-    'Gemini 3 Pro',
+    'Gemini 3 Flash Preview',
     'Gemini 2.5 Flash Lite'
 ] as const;
 
