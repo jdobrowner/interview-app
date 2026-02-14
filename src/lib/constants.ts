@@ -5,11 +5,11 @@ export const MODELS = [
 ] as const;
 
 export const STRATEGIES = [
-    'Chain-of-Thought',
-    'Standard Prompting',
-    'Few-Shot Examples',
-    'Behavioral (STAR)',
-    'System Design'
+    'Comprehensive Technical Screen',
+    'Deep Technical Probe',
+    'Role-Specific Simulation',
+    'Leadership & Soft Skills Evaluation',
+    'Architectural Trade-off Analysis'
 ] as const;
 
 export const DIFFICULTIES = ['Junior', 'Senior', 'Staff'] as const;
