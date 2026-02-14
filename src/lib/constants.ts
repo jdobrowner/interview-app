@@ -1,7 +1,7 @@
 export const MODELS = [
-    'GPT-4o (Omni)',
-    'Claude 3.5 Sonnet',
-    'Llama 3 70B'
+    'Gemini 3 Flash',
+    'Gemini 3 Pro',
+    'Gemini 2.5 Flash Lite'
 ] as const;
 
 export const STRATEGIES = [
