@@ -7,7 +7,9 @@ export const MODELS = [
 export const STRATEGIES = [
     'Chain-of-Thought',
     'Standard Prompting',
-    'Few-Shot Examples'
+    'Few-Shot Examples',
+    'Behavioral (STAR)',
+    'System Design'
 ] as const;
 
 export const DIFFICULTIES = ['Junior', 'Senior', 'Staff'] as const;

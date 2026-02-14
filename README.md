@@ -31,7 +31,12 @@ This application implements a high-performance, three-tier architecture designed
 ### System Prompt Management
 To maintain a clean separation of concerns, our prompting logic is decoupled from the application logic:
 
--   **The Prompt Library (`src/lib/ai/systemPrompts.ts`)**: This module acts as the definitive storage for **System Prompts**. It contains technical strategy fragments (e.g., Chain-of-Thought, Few-Shot) that define the "brain" of the AI.
+-   **The Prompt Library (`src/lib/ai/systemPrompts.ts`)**: This module acts as the definitive storage for **System Prompts**. It contains 5 specialized strategy fragments:
+    -   `Standard Prompting`: Standard technical phone screen simulation.
+    -   `Chain-of-Thought`: Enhanced reasoning for deep technical probing.
+    -   `Few-Shot Examples`: Pattern-based questioning based on structured templates.
+    -   `Behavioral (STAR)`: Focused on leadership, accountability, and the STAR methodology.
+    -   `System Design`: High-level architectural challenges focused on scalability and trade-offs.
 -   **The Prompt Composer (`src/lib/ai/promptBuilder.ts`)**: This utility dynamically assembles the master system instruction by injecting the user's specific job description and interview parameters into the selected strategy fragment.
 
 ### AI Inference & Context Injection
