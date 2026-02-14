@@ -1,15 +1,95 @@
 'use client';
 
-import React from 'react';
-import { useAppStore } from '@/lib/store';
+import React, { useEffect, useState } from 'react';
+import { useAppStore, Evaluation } from '@/lib/store';
 
 export default function EvaluationView() {
-    const { setViewState, clearChat, job } = useAppStore();
+    const { setViewState, clearChat, job, config, messages } = useAppStore();
+    const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchEvaluation = async () => {
+            // Skip if no messages (e.g., navigated directly)
+            if (messages.length === 0) {
+                setIsLoading(false);
+                setError('No interview transcript found. Start a practice session first.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/evaluate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ job, config, messages }),
+                });
+
+                if (!response.ok) throw new Error('Evaluation failed');
+
+                const data: Evaluation = await response.json();
+                setEvaluation(data);
+            } catch (err) {
+                console.error('Evaluation error:', err);
+                setError('Failed to generate evaluation. Please try again.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEvaluation();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleRestart = () => {
         clearChat();
         setViewState('idle');
     };
+
+    if (isLoading) {
+        return (
+            <div className="flex-1 h-full w-full bg-background-light dark:bg-background-dark flex items-center justify-center">
+                <div className="text-center space-y-6">
+                    <div className="w-16 h-16 mx-auto relative">
+                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
+                        <div className="relative w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                            <span className="material-icons text-primary text-2xl animate-pulse">psychology</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Analyzing Your Performance</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                            Our AI coach is reviewing your transcript and generating a detailed evaluation...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex-1 h-full w-full bg-background-light dark:bg-background-dark flex items-center justify-center">
+                <div className="text-center space-y-6 max-w-md">
+                    <span className="material-icons text-4xl text-amber-500">warning</span>
+                    <p className="text-slate-600 dark:text-slate-400">{error}</p>
+                    <button
+                        onClick={handleRestart}
+                        className="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition"
+                    >
+                        Back to Setup
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!evaluation) return null;
+
+    const scoreCategories = [
+        { label: 'Communication', score: evaluation.communicationScore },
+        { label: 'Technical Depth', score: evaluation.technicalScore },
+        { label: 'Overall', score: evaluation.overallScore },
+    ];
 
     return (
         <div className="flex-1 h-full w-full bg-background-light dark:bg-background-dark overflow-y-auto custom-scrollbar">
@@ -22,28 +102,37 @@ export default function EvaluationView() {
                     <div className="flex items-center gap-4">
                         <div className="text-right">
                             <div className="text-[10px] font-bold text-slate-500 uppercase">Overall Score</div>
-                            <div className="text-2xl font-mono font-bold text-primary">84/100</div>
+                            <div className="text-2xl font-mono font-bold text-primary">{evaluation.overallScore}/100</div>
                         </div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {[
-                        { label: 'Communication', score: '92%' },
-                        { label: 'Technical Depth', score: '78%' },
-                        { label: 'Confidence', score: '82%' }
-                    ].map((item) => (
+                    {scoreCategories.map((item) => (
                         <div key={item.label} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full px-6 py-4 flex flex-col gap-2">
                             <div className="flex justify-between items-center">
                                 <span className="text-xs font-bold uppercase tracking-widest text-slate-500">{item.label}</span>
-                                <span className="text-xs font-mono font-bold text-primary">{item.score}</span>
+                                <span className="text-xs font-mono font-bold text-primary">{item.score}%</span>
                             </div>
                             <div className="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                <div className="h-full bg-primary rounded-full" style={{ width: item.score }}></div>
+                                <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: `${item.score}%` }}></div>
                             </div>
                         </div>
                     ))}
                 </div>
+
+                {/* Summary */}
+                {evaluation.transcriptSummary && (
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                        <div className="flex items-center gap-2 mb-3 text-slate-500">
+                            <span className="material-icons text-sm">summarize</span>
+                            <h3 className="text-sm font-bold uppercase tracking-wider">Session Summary</h3>
+                        </div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            {evaluation.transcriptSummary}
+                        </p>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6">
@@ -52,14 +141,12 @@ export default function EvaluationView() {
                             <h3 className="text-sm font-bold uppercase tracking-wider">What You Did Well</h3>
                         </div>
                         <ul className="space-y-4">
-                            <li className="flex gap-3 text-sm text-emerald-700 dark:text-emerald-400">
-                                <span className="mt-1.5 w-1 h-1 rounded-full bg-emerald-500 flex-shrink-0"></span>
-                                <span>Strong practical knowledge of <strong>DVC</strong> and <strong>Seldon Core</strong>, demonstrating real-world experience.</span>
-                            </li>
-                            <li className="flex gap-3 text-sm text-emerald-700 dark:text-emerald-400">
-                                <span className="mt-1.5 w-1 h-1 rounded-full bg-emerald-500 flex-shrink-0"></span>
-                                <span>Clear explanation of the semantic versioning strategy for model deployment pipelines.</span>
-                            </li>
+                            {evaluation.positives.map((item, i) => (
+                                <li key={i} className="flex gap-3 text-sm text-emerald-700 dark:text-emerald-400">
+                                    <span className="mt-1.5 w-1 h-1 rounded-full bg-emerald-500 flex-shrink-0"></span>
+                                    <span>{item}</span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -69,14 +156,12 @@ export default function EvaluationView() {
                             <h3 className="text-sm font-bold uppercase tracking-wider">Areas for Improvement</h3>
                         </div>
                         <ul className="space-y-4">
-                            <li className="flex gap-3 text-sm text-amber-700 dark:text-amber-400">
-                                <span className="mt-1.5 w-1 h-1 rounded-full bg-amber-500 flex-shrink-0"></span>
-                                <span>Could provide more detail on specific <strong>quality gates</strong> (e.g., drift detection methods used).</span>
-                            </li>
-                            <li className="flex gap-3 text-sm text-amber-700 dark:text-amber-400">
-                                <span className="mt-1.5 w-1 h-1 rounded-full bg-amber-500 flex-shrink-0"></span>
-                                <span>Mentioning <strong>Observability</strong> stacks (Prometheus/Grafana) would bolster the &apos;Scaling&apos; portion of the answer.</span>
-                            </li>
+                            {evaluation.improvements.map((item, i) => (
+                                <li key={i} className="flex gap-3 text-sm text-amber-700 dark:text-amber-400">
+                                    <span className="mt-1.5 w-1 h-1 rounded-full bg-amber-500 flex-shrink-0"></span>
+                                    <span>{item}</span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
