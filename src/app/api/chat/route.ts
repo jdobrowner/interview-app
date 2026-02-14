@@ -1,10 +1,9 @@
-import { NextResponse } from 'next/server';
+import { google } from '@ai-sdk/google';
+import { streamText } from 'ai';
+import { buildSystemPrompt } from '@/lib/ai/promptBuilder';
 
 /**
- * Chat API Shell
- * 
- * This route will eventually handle the communication with the LLM provider.
- * For now, it defines the expected request interface.
+ * Chat API with Google Gemini
  */
 export async function POST(req: Request) {
     try {
@@ -12,26 +11,30 @@ export async function POST(req: Request) {
         const { messages, config, job } = body;
 
         if (!messages || !config || !job) {
-            return NextResponse.json(
-                { error: 'Missing required fields: messages, config, job' },
-                { status: 400 }
+            return new Response(
+                JSON.stringify({ error: 'Missing required fields: messages, config, job' }),
+                { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }
 
-        // TODO: Integrate with specific Model Provider (e.g., OpenAI, Anthropic, Vercel AI SDK)
-        // const systemPrompt = buildSystemPrompt(job, config);
-        // const stream = await ModelProvider.streamText(...)
+        const systemPrompt = buildSystemPrompt(job, config);
 
-        return NextResponse.json({
-            message: "API Shell: Ready for model integration",
-            status: "success"
+        const result = streamText({
+            model: google('gemini-2.0-flash-exp'),
+            system: systemPrompt,
+            messages: messages.map((m: any) => ({
+                role: m.role,
+                content: m.content,
+            })),
         });
+
+        return result.toTextStreamResponse();
 
     } catch (error) {
         console.error('Chat API Error:', error);
-        return NextResponse.json(
-            { error: 'Internal Server Error' },
-            { status: 500 }
+        return new Response(
+            JSON.stringify({ error: 'Internal Server Error' }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
         );
     }
 }

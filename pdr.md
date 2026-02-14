@@ -8,7 +8,7 @@
 ## 2. Technical Stack & Environment
 *   **Framework**: Next.js (App Router preferred for streaming support).
 *   **Deployment**: Vercel (utilizing Edge Functions for low-latency AI responses).
-*   **Model Provider**: Local hosting (via Ollama) or hosted Open-Weight APIs (e.g., Together.ai, DeepSeek, or Groq).
+*   **Model Provider**: Google Gemini (Flash/Pro) for intelligent reasoning and high concurrency.
 *   **Security**: API keys and sensitive environment variables are stored in `.env.local` and Vercel's encrypted dashboard, never exposed to the client.
 
 ## 3. The "Open Model" Strategy
@@ -34,6 +34,6 @@ The UI supports a "Hybrid Toggle" to switch between a Playground (configuration-
 ## 6. Development Roadmap
 *   **Phase 1**: Set up Next.js boilerplate and Tailwind CSS for the Hybrid Layout.
 *   **Phase 2**: Implement localStorage hooks for job templates and history.
-*   **Phase 3**: Research and integrate an Open Model provider (OpenRouter or Groq).
+*   **Phase 3**: Integrate Google Gemini AI using Vercel AI SDK.
 *   **Phase 4**: Build the streaming chat interface using the Vercel AI SDK.
 *   **Phase 5**: Deploy to Vercel and verify edge function performance.

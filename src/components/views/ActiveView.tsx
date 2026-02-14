@@ -58,17 +58,37 @@ export default function ActiveView() {
         // 4. Stream response
         setIsAiThinking(false); // Thinking done, speaking starts
 
-        // Dynamic import to avoid SSR issues if any
-        const { simulateStreamingResponse } = await import('@/lib/ai/mockStream');
+        const { config, job, messages } = useAppStore.getState();
 
-        const stream = simulateStreamingResponse(
-            "That's a solid foundation. Using semantic tagging for rollbacks is a best practice. I'm curious about the 'automated quality gates' you mentioned – could you elaborate on what specific metrics you tracked (e.g. drift detection, latency) before promoting a model to production?",
-            40
-        );
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                body: JSON.stringify({
+                    messages,
+                    config,
+                    job
+                })
+            });
 
-        for await (const chunk of stream) {
-            // Update the last message with new content using the store action
-            useAppStore.getState().updateLastMessage(chunk);
+            if (!response.ok) throw new Error('Failed to fetch Gemini response');
+
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+
+            if (!reader) throw new Error('No reader available');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                // Note: Standard Text Stream response might contain '0:"word"' parts if using Data Stream.
+                // But since I used toTextStreamResponse, it's just raw text.
+                useAppStore.getState().updateLastMessage(chunk);
+            }
+        } catch (error) {
+            console.error('Error streaming from Gemini:', error);
+            useAppStore.getState().updateLastMessage(" [Error: Failed to connect to Gemini. Please check your API key.]");
         }
     };
 
