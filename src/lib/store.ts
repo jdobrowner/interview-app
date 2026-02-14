@@ -63,12 +63,15 @@ interface InterviewSlice {
     job: JobConfig;
     messages: ChatMessage[];
     isProcessing: boolean;
+    customJobs: JobConfig[];
     setViewState: (view: ViewState) => void;
     setConfig: (config: Partial<InterviewConfig>) => void;
     setJob: (job: Partial<JobConfig>) => void;
     addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'> | ChatMessage) => void;
     updateLastMessage: (content: string) => void;
     clearChat: () => void;
+    addCustomJob: (job: JobConfig) => void;
+    removeCustomJob: (title: string) => void;
 }
 
 interface VoiceSlice {
@@ -107,8 +110,8 @@ const createUISlice: StateCreator<RootState, [["zustand/persist", unknown]], [],
 const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown]], [], InterviewSlice> = (set) => ({
     viewState: 'idle',
     config: {
-        model: 'GPT-4o (Omni)',
-        strategy: 'Chain-of-Thought',
+        model: 'Gemini 3 Flash',
+        strategy: 'Comprehensive Technical Screen',
         difficulty: 'Senior',
         temperature: 0.7,
         topP: 0.9,
@@ -125,6 +128,7 @@ Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure
     },
     messages: [],
     isProcessing: false,
+    customJobs: [],
     setViewState: (view) => set({ viewState: view }),
     setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
     setJob: (job) => set((state) => ({ job: { ...state.job, ...job } })),
@@ -150,6 +154,12 @@ Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure
         return { messages };
     }),
     clearChat: () => set({ messages: [] }),
+    addCustomJob: (job) => set((state) => ({
+        customJobs: [...state.customJobs, job],
+    })),
+    removeCustomJob: (title) => set((state) => ({
+        customJobs: state.customJobs.filter((j) => j.title !== title),
+    })),
 });
 
 const createVoiceSlice: StateCreator<RootState, [["zustand/persist", unknown]], [], VoiceSlice> = (set) => ({
@@ -207,6 +217,7 @@ export const useAppStore = create<RootState>()(
                 sessions: state.sessions,
                 viewState: state.viewState,
                 messages: state.messages,
+                customJobs: state.customJobs,
             }),
         }
     )

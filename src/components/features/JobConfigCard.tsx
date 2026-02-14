@@ -9,7 +9,7 @@ import { JOB_TEMPLATES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 export default function JobConfigCard() {
-    const { job, setJob, viewState } = useAppStore();
+    const { job, setJob, viewState, customJobs, addCustomJob } = useAppStore();
     const [isCollapsed, setIsCollapsed] = React.useState(viewState === 'active');
     const [isAddingNew, setIsAddingNew] = React.useState(false);
 
@@ -28,14 +28,21 @@ export default function JobConfigCard() {
 
     const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
-        const template = JOB_TEMPLATES.find(t => t.name === val);
+        const builtIn = JOB_TEMPLATES.find(t => t.name === val);
+        const custom = customJobs.find(j => j.title === val);
         setJob({
             template: val,
             title: val,
-            description: template ? template.description : ''
+            description: builtIn ? builtIn.description : custom ? custom.description : ''
         });
         setIsAddingNew(false);
     };
+
+    const allTemplateNames = [
+        ...JOB_TEMPLATES.map(t => t.name),
+        ...customJobs.map(j => j.title),
+        'Custom',
+    ];
 
     return (
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-all duration-300">
@@ -61,7 +68,7 @@ export default function JobConfigCard() {
                             value={job.template}
                             disabled={viewState === 'active'}
                             onChange={handleTemplateChange}
-                            options={([...JOB_TEMPLATES.map(t => t.name), 'Custom'] as string[])}
+                            options={(allTemplateNames as string[])}
                             className="h-8 py-1.5 text-xs"
                         />
                     </div>
@@ -112,7 +119,12 @@ export default function JobConfigCard() {
                             <div className="flex gap-2">
                                 <Button
                                     size="sm"
-                                    onClick={() => setIsAddingNew(false)}
+                                    onClick={() => {
+                                        if (job.title && job.description) {
+                                            addCustomJob({ template: job.title, title: job.title, description: job.description });
+                                        }
+                                        setIsAddingNew(false);
+                                    }}
                                     className="px-4 py-2 rounded-lg flex items-center gap-2"
                                 >
                                     <span className="material-icons text-sm">save</span>

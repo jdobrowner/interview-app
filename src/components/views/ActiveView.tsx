@@ -12,8 +12,6 @@ export default function ActiveView() {
         addMessage,
         setViewState,
         saveCurrentSession,
-        isRecording,
-        toggleRecording
     } = useAppStore();
     const [input, setInput] = useState('');
     const [isAiThinking, setIsAiThinking] = useState(false);
@@ -49,14 +47,33 @@ export default function ActiveView() {
         setInput('');
         setIsAiThinking(true);
 
-        // 2. Simulate AI Delay (Thinking)
-        await new Promise(resolve => setTimeout(resolve, 800));
+        // 2. SecurityShield — check input before sending to interviewer
+        try {
+            const guardRes = await fetch('/api/guard', {
+                method: 'POST',
+                body: JSON.stringify({ message: userMsg }),
+            });
+            const guardData = await guardRes.json();
+
+            if (!guardData.safe) {
+                // Show a system-style warning in chat
+                addMessage({
+                    role: 'assistant',
+                    content: `⚠️ **Input not accepted.** ${guardData.reason || 'Please keep your responses relevant to the interview.'}\n\nLet's stay focused — could you rephrase your answer?`,
+                });
+                setIsAiThinking(false);
+                return;
+            }
+        } catch (guardError) {
+            // Fail-open: if guard is unreachable, proceed anyway
+            console.warn('Security guard unavailable, proceeding:', guardError);
+        }
 
         // 3. Create placeholder for AI response
         addMessage({ role: 'assistant', content: '' });
 
-        // 4. Stream response
-        setIsAiThinking(false); // Thinking done, speaking starts
+        // 4. Stream response from interviewer
+        setIsAiThinking(false);
 
         const { config, job, messages } = useAppStore.getState();
 
@@ -82,8 +99,6 @@ export default function ActiveView() {
                 if (done) break;
 
                 const chunk = decoder.decode(value, { stream: true });
-                // Note: Standard Text Stream response might contain '0:"word"' parts if using Data Stream.
-                // But since I used toTextStreamResponse, it's just raw text.
                 useAppStore.getState().updateLastMessage(chunk);
             }
         } catch (error) {
@@ -136,7 +151,7 @@ export default function ActiveView() {
                 <div className="max-w-4xl mx-auto flex items-center gap-4">
                     <div className="flex-1 relative group">
                         <textarea
-                            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-12 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none custom-scrollbar"
+                            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-5 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none custom-scrollbar"
                             placeholder="Type your response..."
                             rows={1}
                             value={input}
@@ -148,15 +163,7 @@ export default function ActiveView() {
                                 }
                             }}
                         />
-                        <button
-                            onClick={toggleRecording}
-                            className={cn(
-                                "absolute left-4 bottom-4 transition cursor-pointer",
-                                isRecording ? "text-red-500 scale-110 animate-pulse" : "text-slate-400 hover:text-primary"
-                            )}
-                        >
-                            <span className="material-icons">{isRecording ? 'mic' : 'mic_none'}</span>
-                        </button>
+                        {/* Mic button removed — future voice integration */}
                         <button
                             onClick={handleSend}
                             className="absolute right-4 bottom-3.5 w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition cursor-pointer"
