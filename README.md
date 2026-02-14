@@ -20,17 +20,25 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## System Architecture & Orchestration
 
-To learn more about Next.js, take a look at the following resources:
+This application implements a high-performance, three-tier architecture designed for low-latency conversational AI:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1.  **State Management (Zustand)**: Orchestrates the interview lifecycle, maintaining real-time message history, job configurations, and strategy selections.
+2.  **API Integration Layer (Edge Runtime)**: A secure Next.js route (`/api/chat`) that sanitizes requests and manages sensitive environment variables.
+3.  **Inference Layer (Google Gemini)**: Utilizing the **Vercel AI SDK** to facilitate real-time, streaming text generation at the edge.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### System Prompt Management
+To maintain a clean separation of concerns, our prompting logic is decoupled from the application logic:
 
-## Deploy on Vercel
+-   **The Prompt Library (`src/lib/ai/systemPrompts.ts`)**: This module acts as the definitive storage for **System Prompts**. It contains technical strategy fragments (e.g., Chain-of-Thought, Few-Shot) that define the "brain" of the AI.
+-   **The Prompt Composer (`src/lib/ai/promptBuilder.ts`)**: This utility dynamically assembles the master system instruction by injecting the user's specific job description and interview parameters into the selected strategy fragment.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### AI Inference & Context Injection
+The interaction flow within `src/app/api/chat/route.ts` follows a strict protocol:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  **Instruction Synthesis**: The server generates a master system instruction via `buildSystemPrompt`.
+2.  **Model Priming**: This instruction is passed to the Gemini model using the **`system`** property, which establishes the persona and ruleset before the first token is generated.
+3.  **Token Streaming**: Gemini processes the context and initiates a word-by-word text stream, which is decoded and rendered in the frontend for an immersive user experience.
+
+## Development Roadmap

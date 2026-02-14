@@ -1,11 +1,11 @@
 import { JobConfig, InterviewConfig } from '../store';
-import { PROMPT_TEXTS } from '../constants';
+import { SYSTEM_PROMPTS } from './systemPrompts';
 
 /**
  * Dynamically assembles a system prompt based on the user's interview configuration and job details.
  */
 export function buildSystemPrompt(job: JobConfig, config: InterviewConfig): string {
-    const strategyPrompt = PROMPT_TEXTS[config.strategy] || PROMPT_TEXTS['Standard Prompting'];
+    const strategyPrompt = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS['Standard Prompting'];
 
     return `
 # PERSONA
