@@ -30,7 +30,7 @@ export default function AppShell() {
 
             <main className="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative overflow-hidden">
                 {viewState === 'idle' && <IdleView />}
-                {viewState === 'active' && <ActiveView />}
+                {(viewState === 'active' || viewState === 'history_replay') && <ActiveView />}
                 {viewState === 'evaluation' && <EvaluationView />}
                 {viewState === 'history' && <HistoryView />}
             </main>

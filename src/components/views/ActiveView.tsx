@@ -16,7 +16,9 @@ export default function ActiveView() {
     const [input, setInput] = useState('');
     const [isAiThinking, setIsAiThinking] = useState(false);
     const hasInitialized = useRef(false);
-    const isReadOnly = useAppStore.getState().viewState === 'history_replay';
+    const { viewState: currentViewState } = useAppStore();
+    const isReadOnly = currentViewState === 'history_replay';
+
 
 
     // When the interview starts, have the AI send an opening question
@@ -120,6 +122,40 @@ export default function ActiveView() {
             if (!response.ok) throw new Error('Failed to fetch Gemini response');
 
             const reader = response.body?.getReader();
+            /* Phase G: Enhanced Evaluation & History
+            Refined the post-interview experience and data persistence:
+            - **UI Cleanup**: Removed brain icon from `IdleView` for a professional, focused start.
+            - **Advanced Coaching**: Updated `EvaluationPrompt` to generate a detailed "Improved Response" sample.
+            - **Persistent History**: Evaluations are now saved in `localStorage` alongside transcripts; clicking history items restores the full report instantly.
+            - **Conversation Replay**: Added "View Conversation" to the report, allowing users to review their transcript in a read-only mode with a "Return to Evaluation" bridge.
+            
+            ## 3-Model Architecture (Final)
+            
+            ```mermaid
+            graph LR
+                A["User Input"] --> B["SecurityShield<br/>gemini-2.5-flash-lite"]
+                B -->|SAFE| C["Interviewer<br/>gemini-3-flash-preview"]
+                B -->|BLOCKED| D["Inline Warning"]
+                C --> E["Transcript"]
+                E -->|Finish Interview| F["Coach<br/>gemini-3-flash-preview"]
+                F --> G["Performance Report<br/>+ Improved Response"]
+            ```
+            
+            ## Final Verification
+            
+            ✅ `npm run build` — Successful; all routes and persistence logic verified.
+            ✅ **Persistence Test** — Refreshed page and restored evaluation from history sidebar successfully.
+            
+            ````carousel
+            ![Idle View — Cleaned up interface (brain icon removed)](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/idle_view_no_icon_1771146164732.png)
+            <!-- slide -->
+            ![Performance Report — Now includes AI-Improved Response Sample and View Conversation bridge](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/evaluation_with_improved_response_v2_1771146549698.png)
+            <!-- slide -->
+            ![Conversation Replay — Read-only transcript view with Back to Evaluation navigation](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/history_replay_fixed_1771146701618.png)
+            ````
+            
+            ![Final verification flow recording](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/phase_g_verification_fixed_1771146675555.webp)
+            */
             const decoder = new TextDecoder();
 
             if (!reader) throw new Error('No reader available');
