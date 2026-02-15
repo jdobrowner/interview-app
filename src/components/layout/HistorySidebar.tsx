@@ -90,23 +90,37 @@ export default function HistorySidebar() {
                     )}
                 </div>
 
-                <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-4">
-                    {sessions.length > 0 && (
-                        <Button
-                            className="w-full text-xs"
-                            size="sm"
-                            onClick={() => {
-                                setViewState('history');
-                                toggleHistorySidebar();
-                            }}
-                        >
-                            View All History
-                        </Button>
-                    )}
-                    <p className="text-[10px] text-slate-400 italic text-center leading-relaxed">
-                        History is stored locally in your browser and persists across refreshes.
-                    </p>
-                </div>
+                {sessions.length > 0 && (
+                    <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-4">
+                        <div className="flex gap-2">
+                            <Button
+                                className="flex-1 text-[11px] h-9"
+                                size="sm"
+                                onClick={() => {
+                                    setViewState('history');
+                                    toggleHistorySidebar();
+                                }}
+                            >
+                                View All
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                className="text-[11px] text-slate-400 h-9 hover:text-red-500 hover:bg-red-50"
+                                size="sm"
+                                onClick={() => {
+                                    if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+                                        useAppStore.getState().clearHistory();
+                                    }
+                                }}
+                            >
+                                Clear All
+                            </Button>
+                        </div>
+                        <p className="text-[10px] text-slate-400 italic text-center leading-relaxed">
+                            History is stored locally in your browser and persists across refreshes.
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );
