@@ -1,6 +1,6 @@
 import { google } from '@ai-sdk/google';
 import { createOllama } from 'ollama-ai-provider-v2';
-import { streamText, LanguageModel } from 'ai';
+import { streamText } from 'ai';
 import { buildSystemPrompt } from '@/lib/ai/promptBuilder';
 
 /**

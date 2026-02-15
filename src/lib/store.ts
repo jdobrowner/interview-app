@@ -18,8 +18,8 @@ export interface InterviewConfig {
     difficulty: 'Junior' | 'Senior' | 'Staff';
     temperature: number;
     topP: number;
-    ollamaBaseUrl?: string; // New for Phase I
-    ollamaModelName?: string; // New for Phase I
+    ollamaBaseUrl?: string;
+    ollamaModelName?: string;
 }
 
 export interface JobConfig {

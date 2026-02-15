@@ -86,33 +86,10 @@ export default function ActiveView() {
         setInput('');
         setIsAiThinking(true);
 
-        // 2. SecurityShield — check input before sending to interviewer
-        try {
-            const guardRes = await fetch('/api/guard', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMsg }),
-            });
-            const guardData = await guardRes.json();
-
-            if (!guardData.safe) {
-                // Show a system-style warning in chat
-                addMessage({
-                    role: 'assistant',
-                    content: `⚠️ **Input not accepted.** ${guardData.reason || 'Please keep your responses relevant to the interview.'}\n\nLet's stay focused — could you rephrase your answer?`,
-                });
-                setIsAiThinking(false);
-                return;
-            }
-        } catch (guardError) {
-            // Fail-open: if guard is unreachable, proceed anyway
-            console.warn('Security guard unavailable, proceeding:', guardError);
-        }
-
-        // 3. Create placeholder for AI response
+        // 2. Create placeholder for AI response
         addMessage({ role: 'assistant', content: '' });
 
-        // 4. Stream response from interviewer
+        // 3. Stream response from interviewer
         setIsAiThinking(false);
 
         const { config, job, messages } = useAppStore.getState();
