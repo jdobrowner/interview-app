@@ -22,9 +22,11 @@ export default function JobConfigCard() {
 
     const handleAddNew = () => {
         setIsAddingNew(true);
-        setJob({ template: 'Custom', title: '', description: '' });
+        // Start with empty state but don't set template to 'Custom'
+        setJob({ template: '', title: '', description: '' });
         setIsCollapsed(false);
     };
+
 
     const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
@@ -41,8 +43,8 @@ export default function JobConfigCard() {
     const allTemplateNames = [
         ...JOB_TEMPLATES.map(t => t.name),
         ...customJobs.map(j => j.title),
-        'Custom',
     ];
+
 
     return (
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-all duration-300">
@@ -62,28 +64,46 @@ export default function JobConfigCard() {
                     </button>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3">
-                        <span className="text-[11px] text-slate-500 uppercase font-bold">Templates</span>
-                        <Select
-                            value={job.template}
-                            disabled={viewState === 'active'}
-                            onChange={handleTemplateChange}
-                            options={(allTemplateNames as string[])}
-                            className="h-8 py-1.5 text-xs"
-                        />
-                    </div>
-                    {!isAddingNew && (
+                    {!isAddingNew ? (
+                        <>
+                            <div className="flex items-center gap-3">
+                                <span className="text-[11px] text-slate-500 uppercase font-bold">Templates</span>
+                                <Select
+                                    value={job.template}
+                                    disabled={viewState === 'active'}
+                                    onChange={handleTemplateChange}
+                                    options={(allTemplateNames as string[])}
+                                    className="h-8 py-1.5 text-xs"
+                                />
+                            </div>
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={handleAddNew}
+                                className="text-[10px] bg-primary/10 text-primary hover:bg-primary/20 px-2.5 py-1 h-7 rounded font-bold uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer"
+                            >
+                                <span className="material-icons text-[12px]">add_circle</span>
+                                Add New
+                            </Button>
+                        </>
+                    ) : (
                         <Button
-                            variant="secondary"
+                            variant="ghost"
                             size="sm"
-                            onClick={handleAddNew}
-                            className="text-[10px] bg-primary/10 text-primary hover:bg-primary/20 px-2.5 py-1 h-7 rounded font-bold uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer"
+                            onClick={() => {
+                                setIsAddingNew(false);
+                                // Revert to a safe default template
+                                const first = JOB_TEMPLATES[0];
+                                setJob({ template: first.name, title: first.name, description: first.description });
+                            }}
+                            className="text-[10px] text-slate-400 hover:text-slate-200 px-2.5 py-1 h-7 font-bold uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer"
                         >
-                            <span className="material-icons text-[12px]">add_circle</span>
-                            Add New
+                            <span className="material-icons text-[12px]">cancel</span>
+                            Cancel
                         </Button>
                     )}
                 </div>
+
             </div>
 
             <div className={`transition-all duration-500 ease-in-out ${isCollapsed ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-[2000px] opacity-100'}`}>
