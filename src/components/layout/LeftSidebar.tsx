@@ -71,8 +71,8 @@ export default function LeftSidebar() {
                                     />
                                 </div>
                                 <div className="p-2 bg-primary/5 rounded border border-primary/10">
-                                    <p className="text-[9px] text-slate-500 leading-tight">
-                                        <span className="font-bold text-primary">Setup Tip:</span> Run Ollama with <code className="bg-slate-200 dark:bg-slate-800 px-1 rounded">OLLAMA_ORIGINS="*"</code> to allow browser connections.
+                                    <p className="text-xs text-slate-500 leading-relaxed">
+                                        <span className="font-bold text-primary">Setup Tip:</span> Run Ollama with <code className="bg-slate-200 dark:bg-slate-800 px-1 rounded text-[10px]">OLLAMA_ORIGINS="*"</code> to allow browser connections.
                                     </p>
                                 </div>
                             </div>
