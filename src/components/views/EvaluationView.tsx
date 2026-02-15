@@ -190,18 +190,15 @@ export default function EvaluationView() {
                     </div>
                 </div>
 
-                {/* Improved Response - New for Phase G */}
                 {evaluation.improvedResponse && (
                     <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <span className="material-icons text-6xl text-primary">auto_awesome</span>
-                        </div>
                         <div className="flex items-center gap-3 mb-4 text-primary relative z-10">
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <span className="material-icons text-sm">magic_button</span>
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                                <span className="material-icons text-sm">auto_awesome</span>
                             </div>
                             <h3 className="text-sm font-bold uppercase tracking-wider">AI-Improved Response Sample</h3>
                         </div>
+
                         <div className="bg-white/50 dark:bg-slate-800/50 rounded-lg p-5 border border-primary/10 relative z-10">
                             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed italic border-l-4 border-primary pl-4">
                                 {evaluation.improvedResponse}
