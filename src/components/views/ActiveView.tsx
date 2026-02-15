@@ -16,8 +16,17 @@ export default function ActiveView() {
     const [input, setInput] = useState('');
     const [isAiThinking, setIsAiThinking] = useState(false);
     const hasInitialized = useRef(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { viewState: currentViewState } = useAppStore();
     const isReadOnly = currentViewState === 'history_replay';
+
+    // Auto-grow textarea height
+    useEffect(() => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+        }
+    }, [input]);
 
 
 
@@ -237,6 +246,7 @@ export default function ActiveView() {
                         <>
                             <div className="flex-1 relative group">
                                 <textarea
+                                    ref={textareaRef}
                                     className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-5 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none custom-scrollbar"
                                     placeholder="Type your response..."
                                     rows={1}
