@@ -13,14 +13,18 @@ import HistoryView from '../views/HistoryView';
 
 export default function AppShell() {
     const { viewState, theme, sidebarCollapsed } = useAppStore();
+    const [hasMounted, setHasMounted] = React.useState(false);
 
     React.useEffect(() => {
+        setHasMounted(true);
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
     }, [theme]);
+
+    if (!hasMounted) return null;
 
     return (
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans h-screen w-screen flex overflow-hidden">

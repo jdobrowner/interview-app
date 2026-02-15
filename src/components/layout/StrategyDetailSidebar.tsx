@@ -9,7 +9,9 @@ import { Button } from '@/components/ui/Button';
 export default function StrategyDetailSidebar() {
     const { config, strategySidebarOpen, toggleStrategySidebar, sidebarCollapsed } = useAppStore();
 
-    const strategy = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS['Comprehensive Technical Screen'];
+    const strategy = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS['Recruiter Screen'];
+
+    if (!strategy) return null;
 
     return (
         <div
