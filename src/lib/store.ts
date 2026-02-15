@@ -18,6 +18,8 @@ export interface InterviewConfig {
     difficulty: 'Junior' | 'Senior' | 'Staff';
     temperature: number;
     topP: number;
+    ollamaBaseUrl?: string; // New for Phase I
+    ollamaModelName?: string; // New for Phase I
 }
 
 export interface JobConfig {
@@ -121,6 +123,8 @@ const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown
         difficulty: 'Senior',
         temperature: 0.7,
         topP: 0.9,
+        ollamaBaseUrl: 'http://localhost:11434',
+        ollamaModelName: 'llama3',
     },
     job: {
         template: 'ML Ops Specialist',
@@ -225,6 +229,8 @@ export const useAppStore = create<RootState>()(
                 job: state.job,
                 sessions: state.sessions,
                 customJobs: state.customJobs,
+                ollamaBaseUrl: state.config.ollamaBaseUrl,
+                ollamaModelName: state.config.ollamaModelName,
             }),
         }
     )

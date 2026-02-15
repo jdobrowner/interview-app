@@ -36,12 +36,50 @@ export default function LeftSidebar() {
                 }`}>
                 <div className="p-6 space-y-8 min-w-[288px]">
                     {/* Model Selection */}
-                    <Select
-                        label="Model Selection"
-                        value={config.model}
-                        onChange={(e) => setConfig({ model: e.target.value })}
-                        options={[...MODELS]}
-                    />
+                    <div className="space-y-4">
+                        <Select
+                            label="Model Selection"
+                            value={config.model}
+                            onChange={(e) => setConfig({ model: e.target.value })}
+                            options={[...MODELS]}
+                        />
+
+                        {config.model === 'Local (Ollama)' && (
+                            <div className="space-y-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 animate-in slide-in-from-top-2 duration-300">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-tight flex items-center gap-1.5">
+                                        <span className="material-icons text-xs">link</span>
+                                        Ollama Base URL
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={config.ollamaBaseUrl}
+                                        onChange={(e) => setConfig({ ollamaBaseUrl: e.target.value })}
+                                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/50 focus:border-primary transition outline-none"
+                                        placeholder="http://localhost:11434"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-tight flex items-center gap-1.5">
+                                        <span className="material-icons text-xs">psychology</span>
+                                        Local Model Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={config.ollamaModelName}
+                                        onChange={(e) => setConfig({ ollamaModelName: e.target.value })}
+                                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/50 focus:border-primary transition outline-none"
+                                        placeholder="llama3"
+                                    />
+                                </div>
+                                <div className="p-2 bg-primary/5 rounded border border-primary/10">
+                                    <p className="text-[9px] text-slate-500 leading-tight">
+                                        <span className="font-bold text-primary">Setup Tip:</span> Run Ollama with <code className="bg-slate-200 dark:bg-slate-800 px-1 rounded">OLLAMA_ORIGINS="*"</code> to allow browser connections.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
                     {/* Prompt Strategy */}
                     <div className="space-y-2">

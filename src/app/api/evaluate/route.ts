@@ -1,10 +1,10 @@
 import { google } from '@ai-sdk/google';
+import { createOllama } from 'ollama-ai-provider';
 import { generateText } from 'ai';
 import { buildEvaluationPrompt } from '@/lib/ai/evaluationPrompt';
 
 /**
- * Evaluation API — gemini-3-pro
- * Deep reasoning model for post-interview transcript analysis.
+ * Evaluation API supporting both Google Gemini and Local Ollama
  */
 export async function POST(req: Request) {
     try {
@@ -19,8 +19,24 @@ export async function POST(req: Request) {
 
         const evaluationPrompt = buildEvaluationPrompt(job, config, messages);
 
+        // Determine model provider
+        let model: any;
+
+        if (config.model === 'Local (Ollama)') {
+            const ollama = createOllama({
+                baseURL: config.ollamaBaseUrl || 'http://localhost:11434/api',
+            });
+            model = ollama(config.ollamaModelName || 'llama3');
+        } else {
+            // Default to Gemini
+            const geminiModel = config.model === 'Gemini 2.5 Flash Lite'
+                ? 'gemini-2.5-flash-lite'
+                : 'gemini-3-flash-preview';
+            model = google(geminiModel);
+        }
+
         const { text } = await generateText({
-            model: google('gemini-3-flash-preview'),
+            model,
             prompt: evaluationPrompt,
         });
 

@@ -1,6 +1,7 @@
 export const MODELS = [
     'Gemini 3 Flash Preview',
-    'Gemini 2.5 Flash Lite'
+    'Gemini 2.5 Flash Lite',
+    'Local (Ollama)'
 ] as const;
 
 export const STRATEGIES = [
