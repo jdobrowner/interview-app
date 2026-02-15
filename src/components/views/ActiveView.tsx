@@ -224,7 +224,7 @@ export default function ActiveView() {
                             <div className="flex-1 relative group">
                                 <textarea
                                     ref={textareaRef}
-                                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-5 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none custom-scrollbar"
+                                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-5 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none scrollbar-none"
                                     placeholder="Type your response..."
                                     rows={1}
                                     value={input}
