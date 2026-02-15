@@ -117,7 +117,7 @@ const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown
     viewState: 'idle',
     config: {
         model: 'Gemini 3 Flash Preview',
-        strategy: 'Comprehensive Technical Screen',
+        strategy: 'Recruiter Screen',
         difficulty: 'Senior',
         temperature: 0.7,
         topP: 0.9,

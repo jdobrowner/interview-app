@@ -4,11 +4,11 @@ export const MODELS = [
 ] as const;
 
 export const STRATEGIES = [
-    'Comprehensive Technical Screen',
-    'Deep Technical Probe',
-    'Role-Specific Simulation',
-    'Leadership & Soft Skills Evaluation',
-    'Architectural Trade-off Analysis'
+    'Recruiter Screen',
+    'Hiring Manager',
+    'Technical (Domain Knowledge)',
+    'Technical (System Design)',
+    'Leadership (CEO)'
 ] as const;
 
 export const DIFFICULTIES = ['Junior', 'Senior', 'Staff'] as const;
