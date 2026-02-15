@@ -57,22 +57,56 @@ The `EvaluationView` shows a loading animation while Gemini processes the transc
 - `src/app/api/evaluate/route.ts` — Non-streaming `generateText()` call with JSON parsing
 - `src/components/views/EvaluationView.tsx` — Loading state → error handling → dynamic rendering
 
-### 🧠 5 Prompt Strategies
+### 🧠 5 Interview Personas (Prompt Strategies)
 
-Each strategy represents a different interview style, backed by a distinct system prompt with rich metadata:
+Each persona simulates a different interviewer the candidate might face during a real hiring loop. Each is backed by a distinct prompt engineering technique:
 
-| Strategy | Technique | Description |
+| Persona | Technique | Who You're Talking To |
 |:---|:---|:---|
-| Comprehensive Technical Screen | Zero-Shot | Well-rounded interview covering core competencies |
-| Deep Technical Probe | Chain-of-Thought | Forces step-by-step reasoning on complex problems |
-| Role-Specific Simulation | Few-Shot | Pattern-based questioning tied to the job description |
-| Leadership & Soft Skills Evaluation | Behavioral Modeling | STAR methodology for leadership scenarios |
-| Architectural Trade-off Analysis | System Design | High-level architecture challenges focused on trade-offs |
+| Recruiter Screen | Zero-Shot | A Talent Acquisition Specialist — high-level background, motivation, and cultural fit |
+| Hiring Manager | Behavioral Modeling | The Hiring Manager — STAR method evaluation of ownership, impact, and collaboration |
+| Technical (Domain Knowledge) | Few-Shot | A Senior Engineer — few-shot examples calibrate the depth of domain-specific questions |
+| Technical (System Design) | System Design | A Systems Architect — scalability, trade-offs, component selection, failure scenarios |
+| Leadership (CEO) | Chain-of-Thought | The CEO — chain-of-thought reasoning to probe strategic thinking and business acumen |
+
+### 🔧 How the AI Prompt is Assembled
+
+The system prompt sent to Gemini is dynamically constructed at request time through a two-layer pipeline:
+
+```
+User selects a Persona (e.g. "Technical (Domain Knowledge)") in the sidebar
+                              ↓
+/api/chat/route.ts calls buildSystemPrompt(job, config)
+                              ↓
+promptBuilder.ts looks up SYSTEM_PROMPTS[config.strategy]
+  → Retrieves the PromptStrategy object from systemPrompts.ts
+  → Extracts its .content (the technique-specific instructions)
+                              ↓
+promptBuilder.ts assembles the FINAL system prompt by combining:
+  ┌─────────────────────────────────────────────────────────────┐
+  │ 1. PERSONA          — Role identity + conciseness rules    │
+  │ 2. JOB DESCRIPTION  — The full job description text        │
+  │ 3. INTERVIEW PARAMS — Difficulty level + persona name      │
+  │ 4. STRATEGY CONTENT — The .content from systemPrompts.ts   │
+  │                       (Few-Shot examples, STAR method,     │
+  │                        Chain-of-Thought instructions, etc.)│
+  │ 5. RULES            — "Ask ONE question at a time,"        │
+  │                       "Don't provide answers," etc.        │
+  └─────────────────────────────────────────────────────────────┘
+                              ↓
+Final assembled prompt is sent as the `system` parameter to Gemini
+```
+
+**Layer 1 — Strategy Fragments** (`systemPrompts.ts`):
+Each persona is a `PromptStrategy` object with `content` (the actual prompt fragment), `description` (human-readable summary), and `technique` (the prompting method used). These are the building blocks.
+
+**Layer 2 — Prompt Composer** (`promptBuilder.ts`):
+Takes the selected strategy fragment and wraps it in the full interview context — the job description, difficulty level, persona identity, conciseness rules, and behavioral constraints. This is the final prompt Gemini receives.
 
 **Implementation:**
-- `src/lib/ai/systemPrompts.ts` — Each strategy stored as a `PromptStrategy` object with `content`, `description`, and `technique`
-- `src/lib/ai/promptBuilder.ts` — Dynamically assembles the master system prompt by injecting job context into the selected strategy
-- `src/components/layout/StrategyDetailSidebar.tsx` — Slide-out panel showing the strategy description, prompt technique, and the raw system prompt
+- `src/lib/ai/systemPrompts.ts` — 5 persona prompt fragments, each using a specific prompting technique
+- `src/lib/ai/promptBuilder.ts` — Assembles the master system prompt by injecting job context + strategy content
+- `src/components/layout/StrategyDetailSidebar.tsx` — Slide-out panel showing the strategy description, technique, and raw prompt
 
 ### 💼 JobVault (Custom Job Persistence)
 
