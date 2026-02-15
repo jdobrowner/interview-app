@@ -11,6 +11,18 @@ export default function EvaluationView() {
 
     useEffect(() => {
         const fetchEvaluation = async () => {
+            const { selectedSessionId, sessions, updateSessionEvaluation } = useAppStore.getState();
+
+            // Check if we already have an evaluation for this session in history
+            if (selectedSessionId) {
+                const session = sessions.find(s => s.id === selectedSessionId);
+                if (session?.evaluation) {
+                    setEvaluation(session.evaluation);
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
             // Skip if no messages (e.g., navigated directly)
             if (messages.length === 0) {
                 setIsLoading(false);
@@ -29,6 +41,11 @@ export default function EvaluationView() {
 
                 const data: Evaluation = await response.json();
                 setEvaluation(data);
+
+                // Persist the evaluation to history if we have a current session
+                if (selectedSessionId) {
+                    updateSessionEvaluation(selectedSessionId, data);
+                }
             } catch (err) {
                 console.error('Evaluation error:', err);
                 setError('Failed to generate evaluation. Please try again.');
@@ -100,6 +117,13 @@ export default function EvaluationView() {
                         <p className="text-slate-500 text-sm mt-1">Interview Session: {job.title} (Simulation Complete)</p>
                     </div>
                     <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setViewState('history_replay')}
+                            className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary transition flex items-center gap-2 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2 hover:bg-primary/5"
+                        >
+                            <span className="material-icons text-sm">chat_bubble</span>
+                            View Conversation
+                        </button>
                         <div className="text-right">
                             <div className="text-[10px] font-bold text-slate-500 uppercase">Overall Score</div>
                             <div className="text-2xl font-mono font-bold text-primary">{evaluation.overallScore}/100</div>
@@ -165,6 +189,30 @@ export default function EvaluationView() {
                         </ul>
                     </div>
                 </div>
+
+                {/* Improved Response - New for Phase G */}
+                {evaluation.improvedResponse && (
+                    <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <span className="material-icons text-6xl text-primary">auto_awesome</span>
+                        </div>
+                        <div className="flex items-center gap-3 mb-4 text-primary relative z-10">
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <span className="material-icons text-sm">magic_button</span>
+                            </div>
+                            <h3 className="text-sm font-bold uppercase tracking-wider">AI-Improved Response Sample</h3>
+                        </div>
+                        <div className="bg-white/50 dark:bg-slate-800/50 rounded-lg p-5 border border-primary/10 relative z-10">
+                            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed italic border-l-4 border-primary pl-4">
+                                {evaluation.improvedResponse}
+                            </p>
+                        </div>
+                        <p className="text-[10px] text-slate-500 mt-4 uppercase font-bold tracking-widest pl-1 opacity-70">
+                            Pro Tip: Use this as a blueprint for your next session.
+                        </p>
+                    </div>
+                )}
+
 
                 <div className="pt-10 flex justify-center">
                     <button

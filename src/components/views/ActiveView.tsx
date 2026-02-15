@@ -16,6 +16,8 @@ export default function ActiveView() {
     const [input, setInput] = useState('');
     const [isAiThinking, setIsAiThinking] = useState(false);
     const hasInitialized = useRef(false);
+    const isReadOnly = useAppStore.getState().viewState === 'history_replay';
+
 
     // When the interview starts, have the AI send an opening question
     useEffect(() => {
@@ -139,10 +141,13 @@ export default function ActiveView() {
         <div className="flex-1 flex flex-col h-full relative overflow-hidden">
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-y-auto pb-32 custom-scrollbar">
-                {/* Top Card: Job Configuration */}
-                <section className="p-6 w-full max-w-5xl mx-auto">
-                    <JobConfigCard />
-                </section>
+                {/* Top Card: Job Configuration - Hidden in read-only mode */}
+                {!isReadOnly && (
+                    <section className="p-6 w-full max-w-5xl mx-auto">
+                        <JobConfigCard />
+                    </section>
+                )}
+
 
                 {/* Chat Workspace */}
                 <section className="px-6">
@@ -182,41 +187,55 @@ export default function ActiveView() {
 
             {/* Bottom Sticky Bar - Absolute positioning to stay fixed over scroll area */}
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent z-20">
-                <div className="max-w-4xl mx-auto flex items-center gap-4">
-                    <div className="flex-1 relative group">
-                        <textarea
-                            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-5 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none custom-scrollbar"
-                            placeholder="Type your response..."
-                            rows={1}
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSend();
-                                }
-                            }}
-                        />
-                        {/* Mic button removed — future voice integration */}
-                        <button
-                            onClick={handleSend}
-                            className="absolute right-4 bottom-3.5 w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition cursor-pointer"
+                <div className="max-w-4xl mx-auto flex items-center justify-center gap-4">
+                    {isReadOnly ? (
+                        <Button
+                            variant="secondary"
+                            onClick={() => setViewState('evaluation')}
+                            className="px-8 py-4 text-xs tracking-widest uppercase flex items-center gap-2 group shadow-xl"
                         >
-                            <span className="material-icons text-sm">send</span>
-                        </button>
-                    </div>
-                    <Button
-                        variant="danger"
-                        onClick={() => {
-                            saveCurrentSession();
-                            setViewState('evaluation');
-                        }}
-                        className="px-6 py-4 text-xs tracking-widest uppercase flex-shrink-0"
-                    >
-                        Finish Interview
-                    </Button>
+                            <span className="material-icons text-sm transition-transform group-hover:-translate-x-1">arrow_back</span>
+                            Return to Evaluation
+                        </Button>
+                    ) : (
+                        <>
+                            <div className="flex-1 relative group">
+                                <textarea
+                                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-4 pl-5 pr-12 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition shadow-xl resize-none custom-scrollbar"
+                                    placeholder="Type your response..."
+                                    rows={1}
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleSend();
+                                        }
+                                    }}
+                                />
+                                <button
+                                    onClick={handleSend}
+                                    className="absolute right-4 bottom-3.5 w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition cursor-pointer"
+                                >
+                                    <span className="material-icons text-sm">send</span>
+                                </button>
+                            </div>
+                            <Button
+                                variant="danger"
+                                onClick={() => {
+                                    const id = saveCurrentSession();
+                                    if (id) useAppStore.getState().setSelectedSessionId(id);
+                                    setViewState('evaluation');
+                                }}
+                                className="px-6 py-4 text-xs tracking-widest uppercase flex-shrink-0"
+                            >
+                                Finish Interview
+                            </Button>
+                        </>
+                    )}
                 </div>
             </div>
+
         </div>
     );
 }

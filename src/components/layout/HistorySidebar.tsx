@@ -19,15 +19,19 @@ export default function HistorySidebar() {
     } = useAppStore();
 
     const handleLoadSession = (session: any) => {
-        setViewState('idle');
+        // Load session data into the active state for viewing
         setConfig(session.config);
         setJob(session.job);
         clearChat();
-        // Option to reload messages or just settings
         session.messages.forEach((msg: any) => {
             addMessage(msg);
         });
-        setViewState('active');
+
+        // Track which session we are viewing
+        useAppStore.getState().setSelectedSessionId(session.id);
+
+        // Navigate to evaluation
+        setViewState('evaluation');
         toggleHistorySidebar();
     };
 
@@ -87,16 +91,18 @@ export default function HistorySidebar() {
                 </div>
 
                 <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-4">
-                    <Button
-                        className="w-full text-xs"
-                        size="sm"
-                        onClick={() => {
-                            setViewState('history');
-                            toggleHistorySidebar();
-                        }}
-                    >
-                        View All History
-                    </Button>
+                    {sessions.length > 0 && (
+                        <Button
+                            className="w-full text-xs"
+                            size="sm"
+                            onClick={() => {
+                                setViewState('history');
+                                toggleHistorySidebar();
+                            }}
+                        >
+                            View All History
+                        </Button>
+                    )}
                     <p className="text-[10px] text-slate-400 italic text-center leading-relaxed">
                         History is stored locally in your browser and persists across refreshes.
                     </p>

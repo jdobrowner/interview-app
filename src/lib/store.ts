@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 // --- Global Types ---
 
-export type ViewState = 'idle' | 'active' | 'evaluation' | 'history';
+export type ViewState = 'idle' | 'active' | 'evaluation' | 'history' | 'history_replay';
 
 export interface ChatMessage {
     id: string;
@@ -33,6 +33,7 @@ export interface Evaluation {
     positives: string[];
     improvements: string[];
     transcriptSummary: string;
+    improvedResponse: string; // New field for Phase G
 }
 
 export interface InterviewSession {
@@ -51,10 +52,12 @@ interface UISlice {
     sidebarCollapsed: boolean;
     strategySidebarOpen: boolean;
     historySidebarOpen: boolean;
+    selectedSessionId: string | null; // Track which historical session is being viewed
     toggleTheme: () => void;
     toggleSidebar: () => void;
     toggleStrategySidebar: () => void;
     toggleHistorySidebar: () => void;
+    setSelectedSessionId: (id: string | null) => void;
 }
 
 interface InterviewSlice {
@@ -88,7 +91,8 @@ interface VoiceSlice {
 interface HistorySlice {
     sessions: InterviewSession[];
     addSession: (session: InterviewSession) => void;
-    saveCurrentSession: () => void;
+    saveCurrentSession: () => string | null; // Return ID of new session
+    updateSessionEvaluation: (sessionId: string, evaluation: Evaluation) => void;
     clearHistory: () => void;
 }
 
@@ -101,10 +105,12 @@ const createUISlice: StateCreator<RootState, [["zustand/persist", unknown]], [],
     sidebarCollapsed: false,
     strategySidebarOpen: false,
     historySidebarOpen: false,
+    selectedSessionId: null,
     toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
     toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
     toggleStrategySidebar: () => set((state) => ({ strategySidebarOpen: !state.strategySidebarOpen })),
     toggleHistorySidebar: () => set((state) => ({ historySidebarOpen: !state.historySidebarOpen })),
+    setSelectedSessionId: (id) => set({ selectedSessionId: id }),
 });
 
 const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown]], [], InterviewSlice> = (set) => ({
@@ -178,10 +184,11 @@ const createHistorySlice: StateCreator<RootState, [["zustand/persist", unknown]]
     addSession: (session) => set((state) => ({ sessions: [session, ...state.sessions] })),
     saveCurrentSession: () => {
         const state = get();
-        if (state.messages.length === 0) return;
+        if (state.messages.length === 0) return null;
 
+        const id = Math.random().toString(36).substring(7);
         const newSession: InterviewSession = {
-            id: Math.random().toString(36).substring(7),
+            id,
             date: new Date().toLocaleDateString(),
             job: state.job,
             config: state.config,
@@ -189,7 +196,11 @@ const createHistorySlice: StateCreator<RootState, [["zustand/persist", unknown]]
         };
 
         set((state) => ({ sessions: [newSession, ...state.sessions] }));
+        return id;
     },
+    updateSessionEvaluation: (sessionId, evaluation) => set((state) => ({
+        sessions: state.sessions.map(s => s.id === sessionId ? { ...s, evaluation } : s)
+    })),
     clearHistory: () => set({ sessions: [] }),
 });
 

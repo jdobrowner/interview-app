@@ -38,6 +38,7 @@ Respond with ONLY valid JSON in this exact format (no markdown, no code fences):
   "communicationScore": <number>,
   "positives": ["<strength 1>", "<strength 2>", "<strength 3>"],
   "improvements": ["<area 1>", "<area 2>", "<area 3>"],
+  "improvedResponse": "<one detailed example of how a specific weak response from the transcript could have been improved>",
   "transcriptSummary": "<2-3 sentence summary of the interview>"
 }`;
 }
