@@ -116,7 +116,7 @@ export default function EvaluationView() {
                         <h1 className="text-3xl font-bold tracking-tight">Performance Report</h1>
                         <p className="text-slate-500 text-sm mt-1">Interview Session: {job.title} (Simulation Complete)</p>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-10">
                         <button
                             onClick={() => setViewState('history_replay')}
                             className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary transition flex items-center gap-2 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2 hover:bg-primary/5"
