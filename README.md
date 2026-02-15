@@ -177,6 +177,7 @@ src/
     └── utils.ts                   # cn() utility
 ```
 
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -192,7 +193,6 @@ src/
 
 ### Prerequisites
 - Node.js 18+
-- A Google AI API key ([Get one here](https://aistudio.google.com/apikey))
 
 ### Setup
 
@@ -202,14 +202,26 @@ git clone <repo-url>
 cd interview-app
 npm install
 
-# Configure your API key
-echo "GOOGLE_GENERATIVE_AI_API_KEY=your_key_here" > .env.local
-
 # Start the dev server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to start practicing.
+
+### Setup for Local Models (Ollama)
+
+You can run your interviews entirely on your local machine using [Ollama](https://ollama.com/).
+
+1. **Install Ollama**: Download from [ollama.com](https://ollama.com).
+2. **Pull a Model**: e.g., `ollama pull gemma`.
+3. **Run with CORS**: You must set `OLLAMA_ORIGINS` to allow browser connections:
+   ```bash
+   OLLAMA_ORIGINS="*" ollama serve
+   ```
+4. **App Configuration**: 
+   - Set **Model Selection** to `Local (Ollama)` in the sidebar.
+   - Enter your model name (e.g., `gemma`) in the **Local Model Name** field.
+
 
 ## Environment Variables
 

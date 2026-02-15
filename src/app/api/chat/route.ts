@@ -1,5 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { createOllama } from 'ollama-ai-provider';
+import { createOllama } from 'ollama-ai-provider-v2';
 import { streamText, LanguageModel } from 'ai';
 import { buildSystemPrompt } from '@/lib/ai/promptBuilder';
 
@@ -24,10 +24,10 @@ export async function POST(req: Request) {
         let model: any;
 
         if (config.model === 'Local (Ollama)') {
-            const ollama = createOllama({
-                baseURL: config.ollamaBaseUrl || 'http://localhost:11434/api',
-            });
-            model = ollama(config.ollamaModelName || 'llama3');
+            const rawUrl = (config.ollamaBaseUrl || 'http://localhost:11434').replace(/\/+$/, '');
+            const baseURL = rawUrl.endsWith('/api') ? rawUrl : `${rawUrl}/api`;
+            const ollama = createOllama({ baseURL });
+            model = ollama(config.ollamaModelName || 'gemma3');
         } else {
             // Default to Gemini
             const geminiModel = config.model === 'Gemini 2.5 Flash Lite'

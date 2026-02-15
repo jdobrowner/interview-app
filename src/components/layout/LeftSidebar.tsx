@@ -53,10 +53,9 @@ export default function LeftSidebar() {
                                     </label>
                                     <input
                                         type="text"
-                                        value={config.ollamaBaseUrl}
+                                        value={config.ollamaBaseUrl || 'http://localhost:11434'}
                                         onChange={(e) => setConfig({ ollamaBaseUrl: e.target.value })}
                                         className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/50 focus:border-primary transition outline-none"
-                                        placeholder="http://localhost:11434"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -66,10 +65,9 @@ export default function LeftSidebar() {
                                     </label>
                                     <input
                                         type="text"
-                                        value={config.ollamaModelName}
+                                        value={config.ollamaModelName || 'gemma3'}
                                         onChange={(e) => setConfig({ ollamaModelName: e.target.value })}
                                         className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/50 focus:border-primary transition outline-none"
-                                        placeholder="llama3"
                                     />
                                 </div>
                                 <div className="p-2 bg-primary/5 rounded border border-primary/10">
