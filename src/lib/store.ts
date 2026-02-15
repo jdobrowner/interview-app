@@ -103,7 +103,7 @@ export type RootState = UISlice & InterviewSlice & VoiceSlice & HistorySlice;
 // --- Slice Implementation ---
 
 const createUISlice: StateCreator<RootState, [["zustand/persist", unknown]], [], UISlice> = (set) => ({
-    theme: 'dark',
+    theme: 'light',
     sidebarCollapsed: false,
     strategySidebarOpen: false,
     historySidebarOpen: false,
