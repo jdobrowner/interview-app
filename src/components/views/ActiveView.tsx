@@ -18,6 +18,7 @@ export default function ActiveView() {
     const [input, setInput] = useState('');
     const hasInitialized = useRef(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
     const { viewState: currentViewState } = useAppStore();
     const isReadOnly = currentViewState === 'history_replay';
 
@@ -36,6 +37,11 @@ export default function ActiveView() {
             triggerOpeningQuestion();
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Auto-scroll to bottom of messages
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
     const handleSend = () => {
         if (!input.trim() || isAiThinking) return;
@@ -87,6 +93,7 @@ export default function ActiveView() {
                                 </div>
                             </div>
                         ))}
+                        <div ref={messagesEndRef} />
                     </div>
                 </section>
             </div>
