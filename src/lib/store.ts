@@ -86,6 +86,9 @@ interface InterviewSlice {
     evaluationError: string | null;
     fetchEvaluation: () => Promise<void>;
 
+    // Navigation and Session Loading
+    loadSession: (sessionId: string) => void;
+
     // Setters
     setViewState: (view: ViewState) => void;
     setConfig: (config: Partial<InterviewConfig>) => void;
@@ -238,16 +241,21 @@ const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown
     // --- Evaluation Actions ---
 
     fetchEvaluation: async () => {
-        const { selectedSessionId, sessions, evaluation: existing } = get();
+        const state = get();
+        const { selectedSessionId, sessions, evaluation: existing } = state;
 
-        // Don't re-fetch if we already have an evaluation
+        // If we already have an evaluation in the current session state, don't re-fetch
         if (existing) return;
 
-        // Check if we already have a cached evaluation in history
+        // If we are viewing a historical session, check if it already has an evaluation
         if (selectedSessionId) {
             const session = sessions.find(s => s.id === selectedSessionId);
             if (session?.evaluation) {
-                set({ evaluation: session.evaluation, evaluationLoading: false });
+                set({
+                    evaluation: session.evaluation,
+                    evaluationLoading: false,
+                    evaluationError: null
+                });
                 return;
             }
         }
@@ -288,6 +296,29 @@ const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown
                 evaluationError: 'Failed to generate evaluation. Please try again.',
             });
         }
+    },
+
+    // --- Navigation and Session Loading ---
+
+    loadSession: (sessionId: string) => {
+        const { sessions } = get();
+        const session = sessions.find(s => s.id === sessionId);
+
+        if (!session) {
+            console.error(`Session ${sessionId} not found`);
+            return;
+        }
+
+        // Hydrate all state from the session
+        set({
+            config: session.config,
+            job: session.job,
+            messages: session.messages,
+            evaluation: session.evaluation || null,
+            selectedSessionId: sessionId,
+            evaluationError: null,
+            evaluationLoading: false
+        });
     },
 
     // --- Setters ---

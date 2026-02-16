@@ -9,21 +9,17 @@ export default function HistoryView() {
     const {
         sessions,
         setViewState,
-        setConfig,
-        setJob,
-        clearChat,
-        addMessage
+        loadSession
     } = useAppStore();
 
-    const handleLoadSession = (session: any) => {
-        setViewState('idle');
-        setConfig(session.config);
-        setJob(session.job);
-        clearChat();
-        session.messages.forEach((msg: any) => {
-            addMessage(msg);
-        });
-        setViewState('active');
+    const handleViewConversation = (session: any) => {
+        loadSession(session.id);
+        setViewState('history_replay');
+    };
+
+    const handleViewEvaluation = (session: any) => {
+        loadSession(session.id);
+        setViewState('evaluation');
     };
 
     return (
@@ -111,18 +107,14 @@ export default function HistoryView() {
                                 <div className="flex gap-3">
                                     <Button
                                         className="flex-1 text-xs px-0"
-                                        onClick={() => handleLoadSession(session)}
+                                        onClick={() => handleViewConversation(session)}
                                     >
-                                        Reload Session
+                                        View Conversation
                                     </Button>
                                     <Button
                                         variant="outline"
                                         className="text-xs"
-                                        onClick={() => {
-                                            // Future: Open detail view
-                                            handleLoadSession(session);
-                                            setViewState('evaluation');
-                                        }}
+                                        onClick={() => handleViewEvaluation(session)}
                                     >
                                         Evaluation
                                     </Button>

@@ -42,6 +42,16 @@ export function buildEvaluationPrompt(
 ${transcript}
 
 ## Instructions
+Evaluate the candidate's performance with brutal honesty but constructive framing. Use the following scoring rubric to determine scores for each category (Overall, Technical, Communication):
+
+### Scoring Rubric (0-100)
+- **90-100 (Expert)**: Exceptional performance. Demonstrated deep mastery, proactive thinking, and flawless communication.
+- **70-89 (Competent)**: Strong performance. Met all expectations, handled complexity well, and communicated clearly with minor gaps.
+- **50-69 (Developing)**: Mixed results. Shows potential but has significant gaps in knowledge, logic, or communication. (Note: Avoid defaulting to 65; be specific about where they land.)
+- **Below 50 (Needs Work)**: Major red flags, clear lack of required skills, or extremely poor communication.
+
+**CRITICAL**: Do NOT default to "safe" middle-ground scores (like 65 or 70) unless the performance truly merits it. Be precise and justify the score through your analysis.
+
 For the "improvedResponse" field, pick the single weakest Q&A exchange from the transcript. Include the exact question asked, the candidate's original answer, and then write an improved version of their answer that directly applies the coaching tips from your evaluation. **CRITICAL: The improved answer MUST be written in the candidate's first-person voice ("I", "my"), as if they were actually delivering the response in the interview.** The improved answer should build on what the candidate said, not replace it entirely.
 
 ### Example of "improvedResponse" structure and quality:

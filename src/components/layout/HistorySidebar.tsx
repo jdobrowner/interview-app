@@ -20,17 +20,9 @@ export default function HistorySidebar() {
 
     const handleLoadSession = (session: any) => {
         // Load session data into the active state for viewing
-        setConfig(session.config);
-        setJob(session.job);
-        clearChat();
-        session.messages.forEach((msg: any) => {
-            addMessage(msg);
-        });
+        useAppStore.getState().loadSession(session.id);
 
-        // Track which session we are viewing
-        useAppStore.getState().setSelectedSessionId(session.id);
-
-        // Navigate to evaluation
+        // Navigate to evaluation view
         setViewState('evaluation');
         toggleHistorySidebar();
     };
