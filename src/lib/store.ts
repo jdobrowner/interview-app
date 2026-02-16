@@ -35,7 +35,11 @@ export interface Evaluation {
     positives: string[];
     improvements: string[];
     transcriptSummary: string;
-    improvedResponse: string; // New field for Phase G
+    improvedResponse: {
+        question: string;
+        originalAnswer: string;
+        improvedAnswer: string;
+    };
 }
 
 export interface InterviewSession {

@@ -192,20 +192,45 @@ export default function EvaluationView() {
 
                 {evaluation.improvedResponse && (
                     <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 relative overflow-hidden group">
-                        <div className="flex items-center gap-3 mb-4 text-primary relative z-10">
+                        <div className="flex items-center gap-3 mb-6 text-primary relative z-10">
                             <div className="w-8 h-8 rounded-lg flex items-center justify-center">
                                 <span className="material-icons text-sm">auto_awesome</span>
                             </div>
-                            <h3 className="text-sm font-bold uppercase tracking-wider">AI-Improved Response Sample</h3>
+                            <h3 className="text-sm font-bold uppercase tracking-wider">Coaching Example</h3>
                         </div>
 
-                        <div className="bg-white/50 dark:bg-slate-800/50 rounded-lg p-5 border border-primary/10 relative z-10">
-                            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed italic border-l-4 border-primary pl-4">
-                                {evaluation.improvedResponse}
-                            </p>
+                        <div className="space-y-5 relative z-10">
+                            {/* Question Asked */}
+                            <div>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Question Asked</p>
+                                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-white/50 dark:bg-slate-800/50 rounded-lg p-4 border border-slate-200/50 dark:border-slate-700/50">
+                                    {typeof evaluation.improvedResponse === 'string' ? evaluation.improvedResponse : evaluation.improvedResponse.question}
+                                </p>
+                            </div>
+
+                            {/* Original Answer */}
+                            {typeof evaluation.improvedResponse !== 'string' && (
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-2">Your Answer</p>
+                                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed italic bg-amber-500/5 rounded-lg p-4 border-l-4 border-amber-500/30">
+                                        {evaluation.improvedResponse.originalAnswer}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Coached Improvement */}
+                            {typeof evaluation.improvedResponse !== 'string' && (
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-500 mb-2">Coached Response</p>
+                                    <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-emerald-500/5 rounded-lg p-4 border-l-4 border-emerald-500/30">
+                                        {evaluation.improvedResponse.improvedAnswer}
+                                    </p>
+                                </div>
+                            )}
                         </div>
-                        <p className="text-[10px] text-slate-500 mt-4 uppercase font-bold tracking-widest pl-1 opacity-70">
-                            Pro Tip: Use this as a blueprint for your next session.
+
+                        <p className="text-[10px] text-slate-500 mt-5 uppercase font-bold tracking-widest pl-1 opacity-70">
+                            Pro Tip: Compare the two answers to see how the coaching tips apply in practice.
                         </p>
                     </div>
                 )}
