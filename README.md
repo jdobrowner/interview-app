@@ -1,6 +1,6 @@
 # AI Interview Prep Studio
 
-A real-time, AI-powered technical interview simulator built with Next.js and Google Gemini. Practice mock interviews tailored to specific job descriptions, receive live AI feedback, and get a detailed post-session performance report — all from your browser.
+A real-time, AI-powered technical interview simulator built with Next.js. Practice mock interviews tailored to specific job descriptions, receive live AI feedback, and get a detailed post-session performance report.
 
 ## Features
 
@@ -15,16 +15,16 @@ The application supports Google Gemini and local models via Ollama:
 
 ### 💬 Streaming Interview Chat
 
-The core experience is a real-time, streaming conversation with an AI interviewer. Messages are streamed token-by-token from Gemini, producing a natural interview cadence with no perceptible lag.
+The core experience is a real-time, streaming conversation with an AI interviewer. Messages are streamed token-by-token, producing a natural interview cadence.
 
 **Technical details:**
 - Server-side streaming via the Vercel AI SDK's `streamText()` in `/api/chat/route.ts`
 - Client-side `ReadableStream` decoding in `ActiveView.tsx` for progressive rendering
-- Configurable `temperature` and `topP` sliders that pass directly to Gemini's inference parameters
+- Configurable `temperature` and `topP` sliders that pass directly to the model's inference parameters
 
 ###  AI-Powered Performance Evaluation
 
-When the user clicks "Finish Interview," the entire transcript is sent to `gemini-3-flash-preview` for deep analysis. The model returns structured JSON with:
+When the user clicks "Finish Interview," the entire transcript is sent to the model for deep analysis. The model returns structured JSON with:
 
 - **Overall Score** (0–100)
 - **Technical Depth Score** (0–100)
@@ -34,7 +34,7 @@ When the user clicks "Finish Interview," the entire transcript is sent to `gemin
 - **Coaching Example** — A structured before/after showing the original question, the candidate's answer, and a coached improvement
 - **Session Summary** — A 2–3 sentence overview
 
-The `EvaluationView` shows a loading animation while Gemini processes the transcript, then renders the scores as animated progress bars with color-coded feedback cards.
+The `EvaluationView` shows a loading animation while the model processes the transcript, then renders the scores as animated progress bars with color-coded feedback cards.
 
 **Implementation:**
 - `src/lib/ai/evaluationPrompt.ts` — Builds the evaluation prompt with full transcript, job context, and difficulty level
