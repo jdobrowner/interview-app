@@ -241,24 +241,26 @@ const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown
     // --- Evaluation Actions ---
 
     fetchEvaluation: async () => {
-        const state = get();
-        const { selectedSessionId, sessions, evaluation: existing } = state;
+        // Use synchronous checks to block double-calls immediately
+        const initialState = get();
+        if (initialState.evaluation || initialState.evaluationLoading) return;
 
-        // If we already have an evaluation in the current session state, don't re-fetch
-        if (existing) return;
+        // Block further calls
+        set({ evaluationLoading: true, evaluationError: null });
 
-        // If we are viewing a historical session, check if it already has an evaluation
+        // Check if we already have a cached evaluation in history sessions
+        const { selectedSessionId, sessions } = get();
         if (selectedSessionId) {
             const session = sessions.find(s => s.id === selectedSessionId);
             if (session?.evaluation) {
                 set({
                     evaluation: session.evaluation,
-                    evaluationLoading: false,
-                    evaluationError: null
+                    evaluationLoading: false
                 });
                 return;
             }
         }
+
 
         const { messages, job, config } = get();
 
@@ -269,8 +271,6 @@ const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown
             });
             return;
         }
-
-        set({ evaluationLoading: true, evaluationError: null });
 
         try {
             const response = await fetch('/api/evaluate', {
