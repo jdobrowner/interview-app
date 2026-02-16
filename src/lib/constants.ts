@@ -62,3 +62,13 @@ Requirements: Strong communication, problem-solving skills, and experience in ag
     }
 ] as const;
 
+// --- Ollama Defaults ---
+export const DEFAULT_OLLAMA_URL = 'http://localhost:11434';
+export const DEFAULT_OLLAMA_MODEL = 'gemma3';
+
+// --- Model API ID Mapping ---
+// Maps display names (used in UI/store) to the actual API model identifiers
+export const MODEL_IDS: Record<string, string> = {
+    'Gemini 3 Flash Preview': 'gemini-3-flash-preview',
+    'Gemini 2.5 Flash Lite': 'gemini-2.5-flash-lite',
+};

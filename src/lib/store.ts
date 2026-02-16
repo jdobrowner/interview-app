@@ -1,5 +1,6 @@
 import { create, StateCreator } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { MODELS, STRATEGIES, DIFFICULTIES, JOB_TEMPLATES, DEFAULT_OLLAMA_URL, DEFAULT_OLLAMA_MODEL } from './constants';
 
 // --- Global Types ---
 
@@ -132,26 +133,23 @@ const createUISlice: StateCreator<RootState, [["zustand/persist", unknown]], [],
     setSelectedSessionId: (id) => set({ selectedSessionId: id }),
 });
 
+const DEFAULT_JOB = JOB_TEMPLATES[0];
+
 const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown]], [], InterviewSlice> = (set, get) => ({
     viewState: 'idle',
     config: {
-        model: 'Gemini 3 Flash Preview',
-        strategy: 'Recruiter Screen',
-        difficulty: 'Senior',
+        model: MODELS[0],
+        strategy: STRATEGIES[0],
+        difficulty: DIFFICULTIES[1],
         temperature: 0.7,
         topP: 0.9,
-        ollamaBaseUrl: 'http://localhost:11434',
-        ollamaModelName: 'gemma3',
+        ollamaBaseUrl: DEFAULT_OLLAMA_URL,
+        ollamaModelName: DEFAULT_OLLAMA_MODEL,
     },
     job: {
-        template: 'AI Engineer',
-        title: 'AI Engineer',
-        description: `Role: AI Engineer
-Core Responsibilities:
-- Integrate LLMs and generative AI features into production applications.
-- Develop and tune prompts for various AI use cases.
-- Build and maintain RAG (Retrieval-Augmented Generation) pipelines.
-Requirements: Experience with OpenAI API, LangChain or LlamaIndex, and Python/TypeScript.`,
+        template: DEFAULT_JOB.name,
+        title: DEFAULT_JOB.name,
+        description: DEFAULT_JOB.description,
     },
     messages: [],
     isProcessing: false,

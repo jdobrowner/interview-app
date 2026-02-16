@@ -4,12 +4,13 @@ import React from 'react';
 import { useAppStore } from '@/lib/store';
 
 import { SYSTEM_PROMPTS } from '@/lib/ai/systemPrompts';
+import { STRATEGIES } from '@/lib/constants';
 import { Button } from '@/components/ui/Button';
 
 export default function StrategyDetailSidebar() {
     const { config, strategySidebarOpen, toggleStrategySidebar, sidebarCollapsed } = useAppStore();
 
-    const strategy = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS['Recruiter Screen'];
+    const strategy = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS[STRATEGIES[0]];
 
     if (!strategy) return null;
 

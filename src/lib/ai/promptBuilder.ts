@@ -1,5 +1,6 @@
 import { JobConfig, InterviewConfig } from '../store';
 import { SYSTEM_PROMPTS } from './systemPrompts';
+import { STRATEGIES, DIFFICULTIES } from '../constants';
 
 const DIFFICULTY_GUIDELINES: Record<string, string> = {
     'Junior': 'Focus on fundamentals, basic syntax, and following established patterns. Expect basic problem-solving and some guidance. Look for potential and motivation.',
@@ -11,9 +12,9 @@ const DIFFICULTY_GUIDELINES: Record<string, string> = {
  * Dynamically assembles a system prompt based on the user's interview configuration and job details.
  */
 export function buildSystemPrompt(job: JobConfig, config: InterviewConfig): string {
-    const strategy = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS['Recruiter Screen'];
+    const strategy = SYSTEM_PROMPTS[config.strategy] || SYSTEM_PROMPTS[STRATEGIES[0]];
     const strategyPrompt = strategy.content;
-    const difficultyGuideline = DIFFICULTY_GUIDELINES[config.difficulty] || DIFFICULTY_GUIDELINES['Senior'];
+    const difficultyGuideline = DIFFICULTY_GUIDELINES[config.difficulty] || DIFFICULTY_GUIDELINES[DIFFICULTIES[1]];
 
     return `
 # PERSONA

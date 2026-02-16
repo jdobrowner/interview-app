@@ -2,6 +2,7 @@ import { google } from '@ai-sdk/google';
 import { createOllama } from 'ollama-ai-provider-v2';
 import { generateText } from 'ai';
 import { buildEvaluationPrompt } from '@/lib/ai/evaluationPrompt';
+import { MODELS, MODEL_IDS, DEFAULT_OLLAMA_URL, DEFAULT_OLLAMA_MODEL } from '@/lib/constants';
 
 /**
  * Evaluation API supporting both Google Gemini and Local Ollama
@@ -22,17 +23,14 @@ export async function POST(req: Request) {
         // Determine model provider
         let model: any;
 
-        if (config.model === 'Local (Ollama)') {
-            const rawUrl = (config.ollamaBaseUrl || 'http://localhost:11434').replace(/\/+$/, '');
+        if (config.model === MODELS[2]) {
+            const rawUrl = (config.ollamaBaseUrl || DEFAULT_OLLAMA_URL).replace(/\/+$/, '');
             const baseURL = rawUrl.endsWith('/api') ? rawUrl : `${rawUrl}/api`;
             const ollama = createOllama({ baseURL });
-            model = ollama(config.ollamaModelName || 'gemma3');
+            model = ollama(config.ollamaModelName || DEFAULT_OLLAMA_MODEL);
         } else {
-            // Default to Gemini
-            const geminiModel = config.model === 'Gemini 2.5 Flash Lite'
-                ? 'gemini-2.5-flash-lite'
-                : 'gemini-3-flash-preview';
-            model = google(geminiModel);
+            const geminiModelId = MODEL_IDS[config.model] || MODEL_IDS[MODELS[0]];
+            model = google(geminiModelId);
         }
 
         const { text } = await generateText({

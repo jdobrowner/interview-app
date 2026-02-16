@@ -4,7 +4,7 @@ import React from 'react';
 import { useAppStore } from '@/lib/store';
 import { Select } from '@/components/ui/Select';
 import { Slider } from '@/components/ui/Slider';
-import { MODELS, STRATEGIES, DIFFICULTIES } from '@/lib/constants';
+import { MODELS, STRATEGIES, DIFFICULTIES, DEFAULT_OLLAMA_URL, DEFAULT_OLLAMA_MODEL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 export default function LeftSidebar() {
@@ -44,7 +44,7 @@ export default function LeftSidebar() {
                             options={[...MODELS]}
                         />
 
-                        {config.model === 'Local (Ollama)' && (
+                        {config.model === MODELS[2] && (
                             <div className="space-y-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 animate-in slide-in-from-top-2 duration-300">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-tight flex items-center gap-1.5">
@@ -53,7 +53,7 @@ export default function LeftSidebar() {
                                     </label>
                                     <input
                                         type="text"
-                                        value={config.ollamaBaseUrl || 'http://localhost:11434'}
+                                        value={config.ollamaBaseUrl || DEFAULT_OLLAMA_URL}
                                         onChange={(e) => setConfig({ ollamaBaseUrl: e.target.value })}
                                         className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/50 focus:border-primary transition outline-none"
                                     />
@@ -65,7 +65,7 @@ export default function LeftSidebar() {
                                     </label>
                                     <input
                                         type="text"
-                                        value={config.ollamaModelName || 'gemma3'}
+                                        value={config.ollamaModelName || DEFAULT_OLLAMA_MODEL}
                                         onChange={(e) => setConfig({ ollamaModelName: e.target.value })}
                                         className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/50 focus:border-primary transition outline-none"
                                     />
