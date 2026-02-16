@@ -7,11 +7,18 @@
 
 import { JobConfig, InterviewConfig, ChatMessage } from '@/lib/store';
 
+const DIFFICULTY_GUIDELINES: Record<string, string> = {
+    'Junior': 'Expect solid grasp of fundamentals and ability to follow instructions. Score based on potential and clear communication of basic concepts.',
+    'Senior': 'Expect deep technical expertise, understanding of architectural trade-offs, and ownership. Score based on their ability to handle complexity and justify decisions.',
+    'Staff': 'Expect high-level strategic thinking, cross-domain knowledge, and leadership. Score based on their ability to navigate ambiguity and influence system-wide design.'
+};
+
 export function buildEvaluationPrompt(
     job: JobConfig,
     config: InterviewConfig,
     messages: ChatMessage[]
 ): string {
+    const difficultyGuideline = DIFFICULTY_GUIDELINES[config.difficulty] || DIFFICULTY_GUIDELINES['Senior'];
     const transcript = messages
         .map((m) => `${m.role === 'user' ? 'CANDIDATE' : 'INTERVIEWER'}: ${m.content}`)
         .join('\n\n');
@@ -21,7 +28,7 @@ export function buildEvaluationPrompt(
 ## Context
 - **Role**: ${job.title}
 - **Job Description**: ${job.description}
-- **Difficulty Level**: ${config.difficulty}
+- **Difficulty Level**: ${config.difficulty} (${difficultyGuideline})
 - **Prompt Strategy Used**: ${config.strategy}
 
 ## Transcript
