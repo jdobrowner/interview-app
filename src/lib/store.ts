@@ -127,14 +127,14 @@ const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown
         ollamaModelName: 'gemma3',
     },
     job: {
-        template: 'ML Ops Specialist',
-        title: 'ML Ops Specialist',
-        description: `Role: ML Ops Specialist
+        template: 'AI Engineer',
+        title: 'AI Engineer',
+        description: `Role: AI Engineer
 Core Responsibilities:
-- Design and implement end-to-end ML pipelines using Kubeflow and Argo Workflows.
-- Optimize model serving infrastructure for low-latency inference.
-- Maintain CI/CD pipelines for automated model testing and deployment.
-Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure (GCP/AWS).`,
+- Integrate LLMs and generative AI features into production applications.
+- Develop and tune prompts for various AI use cases.
+- Build and maintain RAG (Retrieval-Augmented Generation) pipelines.
+Requirements: Experience with OpenAI API, LangChain or LlamaIndex, and Python/TypeScript.`,
     },
     messages: [],
     isProcessing: false,

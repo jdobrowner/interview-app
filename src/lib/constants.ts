@@ -16,6 +16,15 @@ export const DIFFICULTIES = ['Junior', 'Senior', 'Staff'] as const;
 
 export const JOB_TEMPLATES = [
     {
+        name: 'AI Engineer',
+        description: `Role: AI Engineer
+Core Responsibilities:
+- Integrate LLMs and generative AI features into production applications.
+- Develop and tune prompts for various AI use cases.
+- Build and maintain RAG (Retrieval-Augmented Generation) pipelines.
+Requirements: Experience with OpenAI API, LangChain or LlamaIndex, and Python/TypeScript.`
+    },
+    {
         name: 'ML Ops Specialist',
         description: `Role: ML Ops Specialist
 Core Responsibilities:
@@ -25,8 +34,8 @@ Core Responsibilities:
 Requirements: Strong proficiency in Kubernetes, Python, and cloud infrastructure (GCP/AWS).`
     },
     {
-        name: 'Senior Frontend Engineer',
-        description: `Role: Senior Frontend Engineer
+        name: 'Frontend Engineer',
+        description: `Role: Frontend Engineer
 Core Responsibilities:
 - Architect scalable React applications with modern state management.
 - Ensure high performance and accessibility (WCAG 2.1) standards.
@@ -41,6 +50,15 @@ Core Responsibilities:
 - Optimize database schemas and query performance at scale.
 - Implement robust security protocols and identity management.
 Requirements: Extensive experience with Node.js, Go, or Rust, and distributed systems.`
+    },
+    {
+        name: 'Product Manager',
+        description: `Role: Product Manager
+Core Responsibilities:
+- Define product strategy, roadmap, and requirements based on user needs.
+- Collaborate with engineering and design to deliver high-impact features.
+- Analyze product metrics and user feedback to inform future development.
+Requirements: Strong communication, problem-solving skills, and experience in agile product development.`
     }
 ] as const;
 
