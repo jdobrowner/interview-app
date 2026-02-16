@@ -10,15 +10,16 @@ import { cn } from '@/lib/utils';
 
 export default function JobConfigCard() {
     const { job, setJob, viewState, customJobs, addCustomJob } = useAppStore();
-    const [isCollapsed, setIsCollapsed] = React.useState(viewState === 'active');
+    const isReadOnly = viewState === 'active' || viewState === 'history_replay';
+    const [isCollapsed, setIsCollapsed] = React.useState(isReadOnly);
     const [isAddingNew, setIsAddingNew] = React.useState(false);
 
-    // Auto-collapse when interview starts
+    // Auto-collapse when interview starts or history is viewed
     React.useEffect(() => {
-        if (viewState === 'active') {
+        if (isReadOnly) {
             setIsCollapsed(true);
         }
-    }, [viewState]);
+    }, [viewState, isReadOnly]);
 
     const handleAddNew = () => {
         setIsAddingNew(true);
@@ -70,21 +71,23 @@ export default function JobConfigCard() {
                                 <span className="text-[11px] text-slate-500 uppercase font-bold">Templates</span>
                                 <Select
                                     value={job.template}
-                                    disabled={viewState === 'active'}
+                                    disabled={isReadOnly}
                                     onChange={handleTemplateChange}
                                     options={(allTemplateNames as string[])}
                                     className="h-8 py-1.5 text-xs"
                                 />
                             </div>
-                            <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={handleAddNew}
-                                className="text-[10px] bg-primary/10 text-primary hover:bg-primary/20 px-2.5 py-1 h-7 rounded font-bold uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer"
-                            >
-                                <span className="material-icons text-[12px]">add_circle</span>
-                                Add New
-                            </Button>
+                            {!isReadOnly && (
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={handleAddNew}
+                                    className="text-[10px] bg-primary/10 text-primary hover:bg-primary/20 px-2.5 py-1 h-7 rounded font-bold uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer"
+                                >
+                                    <span className="material-icons text-[12px]">add_circle</span>
+                                    Add New
+                                </Button>
+                            )}
                         </>
                     ) : (
                         <Button

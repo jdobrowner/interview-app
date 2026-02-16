@@ -53,12 +53,10 @@ export default function ActiveView() {
         <div className="flex-1 flex flex-col h-full relative overflow-hidden">
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-y-auto pb-32 custom-scrollbar">
-                {/* Top Card: Job Configuration - Hidden in read-only mode */}
-                {!isReadOnly && (
-                    <section className="p-6 w-full max-w-5xl mx-auto">
-                        <JobConfigCard />
-                    </section>
-                )}
+                {/* Top Card: Job Configuration - Always visible for context */}
+                <section className="p-6 w-full max-w-5xl mx-auto">
+                    <JobConfigCard />
+                </section>
 
 
                 {/* Chat Workspace */}
