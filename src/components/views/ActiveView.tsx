@@ -9,12 +9,13 @@ import { cn } from '@/lib/utils';
 export default function ActiveView() {
     const {
         messages,
-        addMessage,
+        isAiThinking,
+        sendMessage,
+        triggerOpeningQuestion,
         setViewState,
         saveCurrentSession,
     } = useAppStore();
     const [input, setInput] = useState('');
-    const [isAiThinking, setIsAiThinking] = useState(false);
     const hasInitialized = useRef(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { viewState: currentViewState } = useAppStore();
@@ -28,8 +29,6 @@ export default function ActiveView() {
         }
     }, [input]);
 
-
-
     // When the interview starts, have the AI send an opening question
     useEffect(() => {
         if (messages.length === 0 && !hasInitialized.current) {
@@ -38,125 +37,10 @@ export default function ActiveView() {
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const triggerOpeningQuestion = async () => {
-        setIsAiThinking(true);
-        addMessage({ role: 'assistant', content: '' });
-
-        const { config, job } = useAppStore.getState();
-
-        try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messages: [{ role: 'user', content: 'Please begin the interview.' }],
-                    config,
-                    job,
-                }),
-            });
-
-            if (!response.ok) throw new Error('Failed to fetch opening question');
-
-            const reader = response.body?.getReader();
-            const decoder = new TextDecoder();
-            if (!reader) throw new Error('No reader available');
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                const chunk = decoder.decode(value, { stream: true });
-                useAppStore.getState().updateLastMessage(chunk);
-            }
-        } catch (error) {
-            console.error('Error getting opening question:', error);
-            useAppStore.getState().updateLastMessage(
-                "Hello! I'm ready to begin your interview simulation. Could you start by telling me about your background and experience relevant to this role?"
-            );
-        } finally {
-            setIsAiThinking(false);
-        }
-    };
-
-    const handleSend = async () => {
+    const handleSend = () => {
         if (!input.trim() || isAiThinking) return;
-
-        // 1. Add User Message
-        const userMsg = input;
-        addMessage({ role: 'user', content: userMsg });
+        sendMessage(input);
         setInput('');
-        setIsAiThinking(true);
-
-        // 2. Create placeholder for AI response
-        addMessage({ role: 'assistant', content: '' });
-
-        // 3. Stream response from interviewer
-        setIsAiThinking(false);
-
-        const { config, job, messages } = useAppStore.getState();
-
-        try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messages,
-                    config,
-                    job
-                })
-            });
-
-            if (!response.ok) throw new Error('Failed to fetch Gemini response');
-
-            const reader = response.body?.getReader();
-            /* Phase G: Enhanced Evaluation & History
-            Refined the post-interview experience and data persistence:
-            - **UI Cleanup**: Removed brain icon from `IdleView` for a professional, focused start.
-            - **Advanced Coaching**: Updated `EvaluationPrompt` to generate a detailed "Improved Response" sample.
-            - **Persistent History**: Evaluations are now saved in `localStorage` alongside transcripts; clicking history items restores the full report instantly.
-            - **Conversation Replay**: Added "View Conversation" to the report, allowing users to review their transcript in a read-only mode with a "Return to Evaluation" bridge.
-            
-            ## 3-Model Architecture (Final)
-            
-            ```mermaid
-            graph LR
-                A["User Input"] --> B["SecurityShield<br/>gemini-2.5-flash-lite"]
-                B -->|SAFE| C["Interviewer<br/>gemini-3-flash-preview"]
-                B -->|BLOCKED| D["Inline Warning"]
-                C --> E["Transcript"]
-                E -->|Finish Interview| F["Coach<br/>gemini-3-flash-preview"]
-                F --> G["Performance Report<br/>+ Improved Response"]
-            ```
-            
-            ## Final Verification
-            
-            ✅ `npm run build` — Successful; all routes and persistence logic verified.
-            ✅ **Persistence Test** — Refreshed page and restored evaluation from history sidebar successfully.
-            
-            ````carousel
-            ![Idle View — Cleaned up interface (brain icon removed)](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/idle_view_no_icon_1771146164732.png)
-            <!-- slide -->
-            ![Performance Report — Now includes AI-Improved Response Sample and View Conversation bridge](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/evaluation_with_improved_response_v2_1771146549698.png)
-            <!-- slide -->
-            ![Conversation Replay — Read-only transcript view with Back to Evaluation navigation](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/history_replay_fixed_1771146701618.png)
-            ````
-            
-            ![Final verification flow recording](/Users/jasondobrowner/.gemini/antigravity/brain/710cfb73-8c02-45c8-b6de-0cb27fe2c7dd/phase_g_verification_fixed_1771146675555.webp)
-            */
-            const decoder = new TextDecoder();
-
-            if (!reader) throw new Error('No reader available');
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                const chunk = decoder.decode(value, { stream: true });
-                useAppStore.getState().updateLastMessage(chunk);
-            }
-        } catch (error) {
-            console.error('Error streaming from Gemini:', error);
-            useAppStore.getState().updateLastMessage(" [Error: Failed to connect to Gemini. Please check your API key.]");
-        }
     };
 
     return (

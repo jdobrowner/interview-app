@@ -1,68 +1,27 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useAppStore, Evaluation } from '@/lib/store';
+import React, { useEffect } from 'react';
+import { useAppStore } from '@/lib/store';
 
 export default function EvaluationView() {
-    const { setViewState, clearChat, job, config, messages } = useAppStore();
-    const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const {
+        setViewState,
+        clearChat,
+        job,
+        evaluation,
+        evaluationLoading,
+        evaluationError,
+        fetchEvaluation,
+    } = useAppStore();
 
-    useEffect(() => {
-        const fetchEvaluation = async () => {
-            const { selectedSessionId, sessions, updateSessionEvaluation } = useAppStore.getState();
-
-            // Check if we already have an evaluation for this session in history
-            if (selectedSessionId) {
-                const session = sessions.find(s => s.id === selectedSessionId);
-                if (session?.evaluation) {
-                    setEvaluation(session.evaluation);
-                    setIsLoading(false);
-                    return;
-                }
-            }
-
-            // Skip if no messages (e.g., navigated directly)
-            if (messages.length === 0) {
-                setIsLoading(false);
-                setError('No interview transcript found. Start a practice session first.');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/evaluate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ job, config, messages }),
-                });
-
-                if (!response.ok) throw new Error('Evaluation failed');
-
-                const data: Evaluation = await response.json();
-                setEvaluation(data);
-
-                // Persist the evaluation to history if we have a current session
-                if (selectedSessionId) {
-                    updateSessionEvaluation(selectedSessionId, data);
-                }
-            } catch (err) {
-                console.error('Evaluation error:', err);
-                setError('Failed to generate evaluation. Please try again.');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchEvaluation();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => { fetchEvaluation(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleRestart = () => {
         clearChat();
         setViewState('idle');
     };
 
-    if (isLoading) {
+    if (evaluationLoading) {
         return (
             <div className="flex-1 h-full w-full bg-background-light dark:bg-background-dark flex items-center justify-center">
                 <div className="text-center space-y-6">
@@ -83,12 +42,12 @@ export default function EvaluationView() {
         );
     }
 
-    if (error) {
+    if (evaluationError) {
         return (
             <div className="flex-1 h-full w-full bg-background-light dark:bg-background-dark flex items-center justify-center">
                 <div className="text-center space-y-6 max-w-md">
                     <span className="material-icons text-4xl text-amber-500">warning</span>
-                    <p className="text-slate-600 dark:text-slate-400">{error}</p>
+                    <p className="text-slate-600 dark:text-slate-400">{evaluationError}</p>
                     <button
                         onClick={handleRestart}
                         className="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition"

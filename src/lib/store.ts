@@ -73,6 +73,19 @@ interface InterviewSlice {
     messages: ChatMessage[];
     isProcessing: boolean;
     customJobs: JobConfig[];
+
+    // Chat actions
+    isAiThinking: boolean;
+    sendMessage: (input: string) => Promise<void>;
+    triggerOpeningQuestion: () => Promise<void>;
+
+    // Evaluation actions
+    evaluation: Evaluation | null;
+    evaluationLoading: boolean;
+    evaluationError: string | null;
+    fetchEvaluation: () => Promise<void>;
+
+    // Setters
     setViewState: (view: ViewState) => void;
     setConfig: (config: Partial<InterviewConfig>) => void;
     setJob: (job: Partial<JobConfig>) => void;
@@ -119,7 +132,7 @@ const createUISlice: StateCreator<RootState, [["zustand/persist", unknown]], [],
     setSelectedSessionId: (id) => set({ selectedSessionId: id }),
 });
 
-const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown]], [], InterviewSlice> = (set) => ({
+const createInterviewSlice: StateCreator<RootState, [["zustand/persist", unknown]], [], InterviewSlice> = (set, get) => ({
     viewState: 'idle',
     config: {
         model: 'Gemini 3 Flash Preview',
@@ -143,6 +156,144 @@ Requirements: Experience with OpenAI API, LangChain or LlamaIndex, and Python/Ty
     messages: [],
     isProcessing: false,
     customJobs: [],
+    isAiThinking: false,
+    evaluation: null,
+    evaluationLoading: false,
+    evaluationError: null,
+
+    // --- Chat Actions ---
+
+    triggerOpeningQuestion: async () => {
+        set({ isAiThinking: true });
+        const state = get();
+        state.addMessage({ role: 'assistant', content: '' });
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages: [{ role: 'user', content: 'Please begin the interview.' }],
+                    config: get().config,
+                    job: get().job,
+                }),
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch opening question');
+
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            if (!reader) throw new Error('No reader available');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                get().updateLastMessage(chunk);
+            }
+        } catch (error) {
+            console.error('Error getting opening question:', error);
+            get().updateLastMessage(
+                "Hello! I'm ready to begin your interview simulation. Could you start by telling me about your background and experience relevant to this role?"
+            );
+        } finally {
+            set({ isAiThinking: false });
+        }
+    },
+
+    sendMessage: async (input: string) => {
+        if (!input.trim() || get().isAiThinking) return;
+
+        const state = get();
+        state.addMessage({ role: 'user', content: input });
+        set({ isAiThinking: true });
+        state.addMessage({ role: 'assistant', content: '' });
+
+        try {
+            const { config, job, messages } = get();
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages, config, job }),
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch response');
+
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            if (!reader) throw new Error('No reader available');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                get().updateLastMessage(chunk);
+            }
+        } catch (error) {
+            console.error('Error streaming response:', error);
+            get().updateLastMessage(' [Error: Failed to connect. Please check your API key or model configuration.]');
+        } finally {
+            set({ isAiThinking: false });
+        }
+    },
+
+    // --- Evaluation Actions ---
+
+    fetchEvaluation: async () => {
+        const { selectedSessionId, sessions, evaluation: existing } = get();
+
+        // Don't re-fetch if we already have an evaluation
+        if (existing) return;
+
+        // Check if we already have a cached evaluation in history
+        if (selectedSessionId) {
+            const session = sessions.find(s => s.id === selectedSessionId);
+            if (session?.evaluation) {
+                set({ evaluation: session.evaluation, evaluationLoading: false });
+                return;
+            }
+        }
+
+        const { messages, job, config } = get();
+
+        if (messages.length === 0) {
+            set({
+                evaluationLoading: false,
+                evaluationError: 'No interview transcript found. Start a practice session first.',
+            });
+            return;
+        }
+
+        set({ evaluationLoading: true, evaluationError: null });
+
+        try {
+            const response = await fetch('/api/evaluate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ job, config, messages }),
+            });
+
+            if (!response.ok) throw new Error('Evaluation failed');
+
+            const data: Evaluation = await response.json();
+            set({ evaluation: data, evaluationLoading: false });
+
+            // Persist to history
+            const { selectedSessionId: sid, updateSessionEvaluation } = get();
+            if (sid) {
+                updateSessionEvaluation(sid, data);
+            }
+        } catch (err) {
+            console.error('Evaluation error:', err);
+            set({
+                evaluationLoading: false,
+                evaluationError: 'Failed to generate evaluation. Please try again.',
+            });
+        }
+    },
+
+    // --- Setters ---
+
     setViewState: (view) => set({ viewState: view }),
     setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
     setJob: (job) => set((state) => ({ job: { ...state.job, ...job } })),
@@ -167,7 +318,7 @@ Requirements: Experience with OpenAI API, LangChain or LlamaIndex, and Python/Ty
         }
         return { messages };
     }),
-    clearChat: () => set({ messages: [] }),
+    clearChat: () => set({ messages: [], evaluation: null, evaluationLoading: false, evaluationError: null }),
     addCustomJob: (job) => set((state) => ({
         customJobs: [...state.customJobs, job],
     })),
