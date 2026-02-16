@@ -4,15 +4,14 @@ A real-time, AI-powered technical interview simulator built with Next.js and Goo
 
 ## Features
 
-### 🎯 Multi-Model Gemini Architecture
+### 🎯 Multi-Model Architecture
 
-The application uses three specialized Gemini models, each optimized for a different stage of the interview lifecycle:
+The application supports Google Gemini and local models via Ollama:
 
 | Stage | Model | Purpose |
 |:---|:---|:---|
-| **Interviewer** | `gemini-3-flash-preview` | Low-latency streaming chat for realistic conversational flow |
-| **Coach** | `gemini-3-flash-preview` | Deep reasoning for post-session transcript analysis and scoring |
-| **Shield** | `gemini-2.5-flash-lite` | Ultra-fast input classification to guard against misuse |
+| **Interviewer** | `gemini-3-flash-preview` / Ollama | Low-latency streaming chat for realistic conversational flow |
+| **Coach** | `gemini-3-flash-preview` / Ollama | Deep reasoning for post-session transcript analysis and scoring |
 
 ### 💬 Streaming Interview Chat
 
@@ -23,23 +22,7 @@ The core experience is a real-time, streaming conversation with an AI interviewe
 - Client-side `ReadableStream` decoding in `ActiveView.tsx` for progressive rendering
 - Configurable `temperature` and `topP` sliders that pass directly to Gemini's inference parameters
 
-### 🛡️ SecurityShield (Input Guard)
-
-Every user message is pre-screened by `gemini-2.5-flash-lite` before reaching the interviewer. The guard classifies input as `SAFE` or `BLOCKED` based on:
-
-- Prompt injection attempts (e.g., "ignore your instructions")
-- Off-topic requests (e.g., asking for recipes or stories)
-- Harmful or inappropriate content
-- System prompt extraction attempts
-
-**Blocked messages** produce an inline chat warning — no disruptive popups, no page navigation. The user is simply asked to rephrase.
-
-**Implementation:**
-- `src/lib/ai/securityShield.ts` — Classification prompt and response parser with `SAFE`/`BLOCKED: <reason>` format
-- `src/app/api/guard/route.ts` — Lightweight API route using `generateText()` (non-streaming)
-- Fail-open design: if the guard crashes, the message proceeds to the interviewer
-
-### 📊 AI-Powered Performance Evaluation
+###  AI-Powered Performance Evaluation
 
 When the user clicks "Finish Interview," the entire transcript is sent to `gemini-3-flash-preview` for deep analysis. The model returns structured JSON with:
 
@@ -48,6 +31,7 @@ When the user clicks "Finish Interview," the entire transcript is sent to `gemin
 - **Communication Score** (0–100)
 - **Strengths** — What the candidate did well
 - **Improvements** — Areas to work on
+- **Coaching Example** — A structured before/after showing the original question, the candidate's answer, and a coached improvement
 - **Session Summary** — A 2–3 sentence overview
 
 The `EvaluationView` shows a loading animation while Gemini processes the transcript, then renders the scores as animated progress bars with color-coded feedback cards.
@@ -112,7 +96,7 @@ Takes the selected strategy fragment and wraps it in the full interview context 
 
 Users can select from built-in job templates or create their own:
 
-- **3 built-in templates:** ML Ops Specialist, Senior Frontend Engineer, Backend Architect
+- **5 built-in templates:** AI Engineer, ML Ops Specialist, Frontend Engineer, Backend Architect, Product Manager
 - **"Add New" flow:** Input a custom title and description, then "Save to My Jobs"
 - **Persistence:** Custom jobs are stored in `localStorage` via Zustand's `persist` middleware and appear in the template dropdown alongside built-in options
 
@@ -141,9 +125,8 @@ Every completed interview is automatically saved with its full transcript, job c
 src/
 ├── app/
 │   ├── api/
-│   │   ├── chat/route.ts          # Interviewer — gemini-3-flash-preview streaming
-│   │   ├── evaluate/route.ts      # Coach — gemini-3-flash-preview evaluation
-│   │   └── guard/route.ts         # Shield — gemini-2.5-flash-lite guard
+│   │   ├── chat/route.ts          # Interviewer — streaming (Gemini or Ollama)
+│   │   └── evaluate/route.ts      # Coach — evaluation (Gemini or Ollama)
 │   ├── layout.tsx
 │   ├── page.tsx
 │   └── globals.css
@@ -162,7 +145,7 @@ src/
 │   │   ├── Select.tsx
 │   │   └── Slider.tsx
 │   └── views/
-│       ├── ActiveView.tsx         # Real-time chat with SecurityShield
+│       ├── ActiveView.tsx         # Real-time chat interface
 │       ├── EvaluationView.tsx     # AI-generated performance report
 │       ├── HistoryView.tsx        # Session replay
 │       └── IdleView.tsx           # Landing / setup screen
@@ -170,7 +153,6 @@ src/
     ├── ai/
     │   ├── evaluationPrompt.ts    # Evaluation prompt builder
     │   ├── promptBuilder.ts       # System prompt composer
-    │   ├── securityShield.ts      # Shield prompt + classifier
     │   └── systemPrompts.ts       # 5 strategy prompt definitions
     ├── constants.ts               # Models, strategies, difficulties, templates
     ├── store.ts                   # Zustand store (UI, Interview, Voice, History)
@@ -186,8 +168,8 @@ src/
 | Language | TypeScript |
 | Styling | Tailwind CSS v4 |
 | State Management | Zustand with `localStorage` persistence |
-| AI SDK | Vercel AI SDK (`ai` + `@ai-sdk/google`) |
-| AI Provider | Google Gemini (3 models) |
+| AI SDK | Vercel AI SDK (`ai` + `@ai-sdk/google` + `ollama-ai-provider-v2`) |
+| AI Provider | Google Gemini or Local Ollama |
 
 ## Getting Started
 
@@ -210,17 +192,21 @@ Open [http://localhost:3000](http://localhost:3000) to start practicing.
 
 ### Setup for Local Models (Ollama)
 
-You can run your interviews entirely on your local machine using [Ollama](https://ollama.com/).
+You can run your interviews entirely on your local machine using [Ollama](https://ollama.com/). No API key required.
 
 1. **Install Ollama**: Download from [ollama.com](https://ollama.com).
-2. **Pull a Model**: e.g., `ollama pull gemma`.
-3. **Run with CORS**: You must set `OLLAMA_ORIGINS` to allow browser connections:
+2. **Pull a Model**: You need to download a model first. The app defaults to `gemma3`:
+   ```bash
+   ollama pull gemma3
+   ```
+3. **Start the Ollama Server**: Ollama must be running in the background. You need `OLLAMA_ORIGINS` set to allow browser connections. Ollama will automatically load the model when the app sends a request — no need to run the model separately.
    ```bash
    OLLAMA_ORIGINS="*" ollama serve
    ```
 4. **App Configuration**: 
    - Set **Model Selection** to `Local (Ollama)` in the sidebar.
-   - Enter your model name (e.g., `gemma`) in the **Local Model Name** field.
+   - The **Local Model Name** field defaults to `gemma3`. Change this to match whatever model you pulled (e.g., `llama3`, `mistral`, etc.).
+   - The **Base URL** defaults to `http://localhost:11434` — the app automatically appends `/api` as needed.
 
 
 ## Environment Variables
