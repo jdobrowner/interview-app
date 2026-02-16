@@ -13,6 +13,13 @@ const DIFFICULTY_GUIDELINES: Record<string, string> = {
     'Staff': 'Expect high-level strategic thinking, cross-domain knowledge, and leadership. Score based on their ability to navigate ambiguity and influence system-wide design.'
 };
 
+const FEW_SHOT_EXAMPLE = {
+    question: "Tell me about a time you handled a difficult stakeholder.",
+    originalAnswer: "Well, I had this manager who kept changing requirements. It was annoying but I just did what they asked every time to keep the peace.",
+    improvedAnswer: "In a previous role, I worked with a stakeholder whose requirements were frequently shifting. Instead of just reacting to changes, I initiated a weekly alignment sync to document trade-offs and clarify the impact of new requests on the project timeline. This allowed me to manage expectations proactively while still being adaptable to business needs."
+};
+
+
 export function buildEvaluationPrompt(
     job: JobConfig,
     config: InterviewConfig,
@@ -35,10 +42,12 @@ export function buildEvaluationPrompt(
 ${transcript}
 
 ## Instructions
-Evaluate the candidate's performance with brutal honesty but constructive framing.
-Score each category from 0 to 100.
+For the "improvedResponse" field, pick the single weakest Q&A exchange from the transcript. Include the exact question asked, the candidate's original answer, and then write an improved version of their answer that directly applies the coaching tips from your evaluation. **CRITICAL: The improved answer MUST be written in the candidate's first-person voice ("I", "my"), as if they were actually delivering the response in the interview.** The improved answer should build on what the candidate said, not replace it entirely.
 
-For the "improvedResponse" field, pick the single weakest Q&A exchange from the transcript. Include the exact question asked, the candidate's original answer, and then write an improved version of their answer that directly applies the coaching tips from your evaluation. The improved answer should build on what the candidate said, not replace it entirely.
+### Example of "improvedResponse" structure and quality:
+\ \ \json
+${JSON.stringify(FEW_SHOT_EXAMPLE, null, 2)}
+\ \ \
 
 Respond with ONLY valid JSON in this exact format (no markdown, no code fences):
 {
@@ -50,8 +59,9 @@ Respond with ONLY valid JSON in this exact format (no markdown, no code fences):
   "improvedResponse": {
     "question": "<the interviewer's exact question>",
     "originalAnswer": "<the candidate's original answer>",
-    "improvedAnswer": "<a coached, improved version of the candidate's answer>"
+    "improvedAnswer": "<a coached, improved version of the candidate's answer, following the voice and quality of the example above>"
   },
   "transcriptSummary": "<2-3 sentence summary of the interview>"
 }`;
 }
+
