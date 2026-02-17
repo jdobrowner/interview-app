@@ -5,7 +5,7 @@
 export interface PromptStrategy {
     content: string;
     description: string;
-    technique: 'Zero-Shot' | 'Few-Shot' | 'Chain-of-Thought' | 'System Design' | 'Behavioral Modeling';
+    technique: 'Zero-Shot' | 'Few-Shot' | 'Chain-of-Thought';
 }
 
 export const RECRUITER_SCREEN: PromptStrategy = {
@@ -26,7 +26,7 @@ Listen to the candidate's response and provide a natural follow-up as a real rec
 };
 
 export const HIRING_MANAGER: PromptStrategy = {
-    technique: 'Behavioral Modeling',
+    technique: 'Zero-Shot',
     description: 'A team-fit interview by the hiring manager using the STAR method to evaluate ownership, impact, and collaboration.',
     content: `You are the Hiring Manager for this role, evaluating team fit and past performance using the STAR method (Situation, Task, Action, Result).
 
@@ -67,7 +67,7 @@ Probe implementation details, code quality, and fundamental engineering principl
 };
 
 export const SYSTEM_DESIGN: PromptStrategy = {
-    technique: 'System Design',
+    technique: 'Zero-Shot',
     description: 'A system design interview by an architect, challenging candidates to build scalable systems and navigate trade-offs.',
     content: `You are a Distinguished Systems Architect conducting a system design interview.
 

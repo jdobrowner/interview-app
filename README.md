@@ -49,9 +49,9 @@ Each persona simulates a different interviewer the candidate might face during a
 | Persona | Technique | Who You're Talking To |
 |:---|:---|:---|
 | Recruiter Screen | Zero-Shot | A Talent Acquisition Specialist — high-level background, motivation, and cultural fit |
-| Hiring Manager | Behavioral Modeling | The Hiring Manager — STAR method evaluation of ownership, impact, and collaboration |
+| Hiring Manager | Zero-Shot | The Hiring Manager — STAR method evaluation of ownership, impact, and collaboration |
 | Technical (Domain Knowledge) | Few-Shot | A Senior Engineer — few-shot examples calibrate the depth of domain-specific questions |
-| Technical (System Design) | System Design | A Systems Architect — scalability, trade-offs, component selection, failure scenarios |
+| Technical (System Design) | Zero-Shot | A Systems Architect — scalability, trade-offs, component selection, failure scenarios |
 | Leadership (CEO) | Chain-of-Thought | The CEO — chain-of-thought reasoning to probe strategic thinking and business acumen |
 
 ### 🔧 How the AI Prompt is Assembled
