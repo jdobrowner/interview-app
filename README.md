@@ -10,8 +10,8 @@ The application supports Google Gemini and local models via Ollama:
 
 | Stage | Model | Purpose |
 |:---|:---|:---|
-| **Interviewer** | `gemini-3-flash-preview` / Ollama | Low-latency streaming chat for realistic conversational flow |
-| **Coach** | `gemini-3-flash-preview` / Ollama | Deep reasoning for post-session transcript analysis and scoring |
+| **Interviewer** | Gemini 3 Flash Preview / Ollama | Low-latency streaming chat for realistic conversational flow |
+| **Coach** | Gemini 3 Flash Preview / Ollama | Deep reasoning for post-session transcript analysis and scoring |
 
 ### 💬 Streaming Interview Chat
 
@@ -19,7 +19,8 @@ The core experience is a real-time, streaming conversation with an AI interviewe
 
 **Technical details:**
 - Server-side streaming via the Vercel AI SDK's `streamText()` in `/api/chat/route.ts`
-- Client-side `ReadableStream` decoding in `ActiveView.tsx` for progressive rendering
+- Client-side `ReadableStream` decoding in `src/lib/store.ts` which progressively updates the global `messages` state
+- `ActiveView.tsx` subscribes to these state changes via the `useAppStore` hook for real-time UI updates
 - Configurable `temperature` and `topP` sliders that pass directly to the model's inference parameters
 
 ###  AI-Powered Performance Evaluation
@@ -135,7 +136,7 @@ src/
 │   │   └── JobConfigCard.tsx      # Job template selection + custom input
 │   ├── layout/
 │   │   ├── AppShell.tsx           # Root layout with view routing
-│   │   ├── HistorySidebar.tsx     # Past session browser
+│   │   ├── HistorySidebar.tsx     # Past session sidebar list
 │   │   ├── LeftSidebar.tsx        # Model, strategy, difficulty, temp/topP
 │   │   ├── RightSidebar.tsx       # History toggle
 │   │   └── StrategyDetailSidebar.tsx  # Prompt strategy inspector
@@ -145,9 +146,9 @@ src/
 │   │   ├── Select.tsx
 │   │   └── Slider.tsx
 │   └── views/
-│       ├── ActiveView.tsx         # Real-time chat interface
+│       ├── ActiveView.tsx         # Real-time chat & history replay
 │       ├── EvaluationView.tsx     # AI-generated performance report
-│       ├── HistoryView.tsx        # Session replay
+│       ├── HistoryView.tsx        # Session browser
 │       └── IdleView.tsx           # Landing / setup screen
 └── lib/
     ├── ai/
