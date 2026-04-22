@@ -3,7 +3,12 @@
 A real-time, AI-powered technical interview simulator built with Next.js. Practice mock interviews tailored to specific job descriptions, receive live AI feedback, and get a detailed post-session performance report.
 
 ![Interview Setup](./designs/interview-app-start.png)
+*Select an AI persona and define your job criteria to launch a customized, real-time mock interview.*
+
+<br />
+
 ![Evaluation Report](./designs/interview-app-evaluation-dark.png)
+*Review a comprehensive post-session analysis detailing your strengths, areas for improvement, and actionable coaching.*
 
 ## Features
 
